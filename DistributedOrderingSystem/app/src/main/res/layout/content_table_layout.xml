@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_table_layout"
+    tools:context="com.example.darosale.distributedorderingsystem.TableLayout"
+    android:background="@drawable/teal_turq">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:id="@+id/table1"
+            android:layout_marginTop="25dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:clickable="true"
+            android:onClick="viewTable" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"
+            android:id="@+id/table2"
+            android:layout_marginTop="125dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:id="@+id/table3"
+            android:layout_marginTop="225dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:nestedScrollingEnabled="false"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="4"
+        android:id="@+id/table4"
+        android:layout_marginTop="325dp"
+        android:elegantTextHeight="false"
+        android:background="@drawable/roundbutton"
+        android:textSize="32dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="25dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"
+            android:id="@+id/table5"
+            android:layout_marginTop="425dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="25dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"
+            android:id="@+id/table6"
+            android:layout_marginTop="25dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="215dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"
+            android:id="@+id/table7"
+            android:layout_marginTop="125dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="215dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8"
+            android:id="@+id/table8"
+            android:layout_marginTop="225dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="215dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9"
+            android:id="@+id/table9"
+            android:layout_marginTop="325dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="215dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:id="@+id/table10"
+            android:layout_marginTop="425dp"
+            android:elegantTextHeight="false"
+            android:background="@drawable/roundbutton"
+            android:textSize="32dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="215dp"
+            android:onClick="viewTable"
+            android:clickable="true" />
+
+    </RelativeLayout>
+</RelativeLayout>

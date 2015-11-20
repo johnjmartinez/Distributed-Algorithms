@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior" tools:showIn="@layout/activity_my"
+    tools:context=".MyActivity"
+    android:background="@drawable/teal">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:id="@+id/button"
+        android:background="@drawable/btn_orange_matte"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/pwd1"
+        android:clickable="true"
+        android:onClick="login" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:id="@+id/button2"
+        android:background="@drawable/btn_orange_matte"
+        android:layout_alignTop="@+id/button"
+        android:layout_alignEnd="@+id/pwd1"
+        android:clickable="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/username1"
+        android:layout_above="@+id/pwd1"
+        android:layout_alignStart="@+id/pwd1"
+        android:layout_alignEnd="@+id/pwd1"
+        android:layout_marginBottom="28dp"
+        android:backgroundTint="#FFFF31B4"
+        android:hint="username"
+        android:layout_centerHorizontal="true"
+        android:textColorHint="#ff31b4" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/pwd1"
+        android:layout_above="@+id/button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="28dp"
+        android:autoText="false"
+        android:hint="password"
+        android:textColorHint="#FFFF31B4"
+        android:backgroundTint="#FFFF31B4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invalid username or password"
+        android:id="@+id/invalid1"
+        android:layout_above="@+id/button"
+        android:layout_alignStart="@+id/button"
+        android:textColor="#ff0000"
+        android:visibility="invisible" />
+
+</RelativeLayout>

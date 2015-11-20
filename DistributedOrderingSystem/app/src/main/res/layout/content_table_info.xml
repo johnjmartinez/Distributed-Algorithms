@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/activity_table_info"
+    tools:context="com.example.darosale.distributedorderingsystem.TableInfo"
+    android:background="@drawable/blue"
+    android:focusable="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Items"
+        android:id="@+id/itemsText"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="1.\n2.\n3.\n4."
+        android:id="@+id/order1"
+        android:background="#ffffff"
+        android:editable="true"
+        android:layout_below="@+id/itemsText"
+        android:layout_toStartOf="@+id/comp1" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:id="@+id/edit1"
+        android:layout_below="@+id/space2"
+        android:layout_alignParentStart="true" />
+
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="50px"
+        android:layout_below="@+id/order1"
+        android:layout_alignParentStart="true"
+        android:id="@+id/space2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total:"
+        android:id="@+id/total1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="49dp"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$99.99"
+        android:id="@+id/cost1"
+        android:textStyle="bold"
+        android:textSize="40dp"
+        android:layout_alignBottom="@+id/total1"
+        android:layout_toEndOf="@+id/space" />
+
+    <Space
+        android:layout_width="50px"
+        android:layout_height="20px"
+        android:id="@+id/space"
+        android:layout_toEndOf="@+id/edit1"
+        android:layout_alignBottom="@+id/cost1"
+        android:layout_alignTop="@+id/cost1" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comp"
+        android:id="@+id/comp1"
+        android:layout_alignTop="@+id/cost1"
+        android:layout_alignEnd="@+id/space2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1\n2\n3\n4"
+        android:id="@+id/qty1"
+        android:layout_alignTop="@+id/order1"
+        android:layout_alignBottom="@+id/order1"
+        android:background="#ffffff"
+        android:layout_alignStart="@+id/qtyText"
+        android:layout_alignEnd="@+id/qtyText"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Qty."
+        android:id="@+id/qtyText"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/order1"
+        android:layout_marginStart="21dp" />
+
+</RelativeLayout>
