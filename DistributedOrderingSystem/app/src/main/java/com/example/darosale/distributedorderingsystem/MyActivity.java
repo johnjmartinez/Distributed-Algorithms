@@ -19,6 +19,18 @@ public class MyActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.darosale.distributedorderingsystem.MESSAGE";
     public static HashMap<String, HashMap<String, Integer>> tableOrders =
             new HashMap<String, HashMap<String, Integer>>();
+    public static final HashMap<String, Double> PRICES;
+    static
+    {
+        PRICES = new HashMap<String, Double>();
+        PRICES.put("Chicken & Waffles", 12.99);
+        PRICES.put("Steak & Potatoes", 18.99);
+        PRICES.put("Burger & Fries", 10.59);
+    }
+
+    public static double getItemPrice(String item){
+        return PRICES.get(item);
+    }
 
     public static void updateTableOrder(String table, String item, Integer qty){
         if (tableOrders.containsKey(table)){
