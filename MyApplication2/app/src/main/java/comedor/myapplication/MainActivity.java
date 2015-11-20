@@ -6,8 +6,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+//import android.view.Menu;
+//import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //NOT SURE IF NEEDED
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /** NOT USING MENU ---
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -50,9 +52,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }**/
 
-    public void display (View view) {
+    public void display(View view) {
         EditText clave = (EditText) findViewById(R.id.editText6);
         EditText name = (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
@@ -61,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         String user = name.getText().toString();
         String pwd = password.getText().toString();
 
-
         if (pwd.equals("rosales") && user.equals("999")) {
-            boton.setVisibility(View.VISIBLE);
-        }
-        else {
+           // boton.setVisibility(View.VISIBLE);
+
+
+        } else {
             clave.setVisibility(View.VISIBLE);
         }
     }
