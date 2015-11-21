@@ -254,7 +254,11 @@ public class TableInfo extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                MyActivity.tableComps.put("table1", Integer.parseInt(input.getText().toString()));
+                int val = Integer.parseInt(input.getText().toString());
+                if (val > 100){
+                    return;
+                }
+                MyActivity.tableComps.put("table1", val);
                 Log.d("put", "" + MyActivity.tableComps.get("table1"));
                 updateActivity();
             }
