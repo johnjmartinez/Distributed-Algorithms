@@ -6,14 +6,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-//import android.view.Menu;
-//import android.view.MenuItem;
 import android.widget.EditText;
-//import android.widget.RadioButton;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    private static Integer[] CLK;
+    private static Integer[] CLK = null;
     private static Integer MY_PORT;
     private Thread LISTENER;
 
@@ -34,58 +32,49 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-    }
 
-    /**
-     * NOT USING MENU ---
-     *
-     * public boolean onCreateOptionsMenu(Menu menu) {
-     * // Inflate the menu; this adds items to the action bar if it is present.
-     * getMenuInflater().inflate(R.menu.menu_main, menu);
-     * return true;
-     * }
-     * public boolean onOptionsItemSelected(MenuItem item) {
-     * // Handle action bar item clicks here. The action bar will
-     * // automatically handle clicks on the Home/Up button, so long
-     * // as you specify a parent activity in AndroidManifest.xml.
-     * int id = item.getItemId();
-     * <p/>
-     * //noinspection SimplifiableIfStatement
-     * if (id == R.id.action_settings) {
-     * return true;
-     * }
-     * <p/>
-     * return super.onOptionsItemSelected(item);
-     * }
-     **/
+    }
 
     public void display(View view) {
         EditText fail = (EditText) findViewById(R.id.editText6); //should be Text or popup
-        EditText name  = (EditText) findViewById(R.id.editText2);
+        EditText name = (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
-        //RadioButton boton = (RadioButton) findViewById(R.id.radioButton);
 
         String user = name.getText().toString();
         String pwd = password.getText().toString();
 
         if (pwd.equals("rosales") && user.equals("999")) {
-            //boton.setVisibility(View.VISIBLE);
-            
             //TODO -- Add check so that user is within size of CLK[] ARR
-            MY_PORT = Integer.parseInt(user);
+            MY_PORT = Integer.parseInt(user); //same as ID
 
-            String initResponse = ServerReq.out("INIT");
+            //Expecting initResponse=CLK+MSG, MSG=OK or ACK
+            // i.e. "[1, 0 , 2, 1, 2]!!ACK"
+            //TODO -- Add check if MSG contains ERROR (retry?) or ANS doesnot have enough fields
+            String answer = ServerReq.out(MY_PORT, CLK, "INIT");
+            String[] fields = answer.split("!!");
+            String MSG = fields[1];
 
-            //TODO -- gotta save pointer somehow to access incoming MSGs?
+            //http://stackoverflow.com/a/7646415/4570161
+            String[] vector = fields[0].replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+            CLK = new Integer[vector.length];
+            for (int i = 0; i < vector.length; i++) {
+                try {
+                    CLK[i] = Integer.parseInt(vector[i]);
+                }
+                catch (NumberFormatException nfe) {}
+            }
+
+            //Start listening for any incoming MSGs from either server or peers
+            //TODO -- gotta save thread pointer somehow to access incoming MSGs?
             new Thread(new ListenerThread(MY_PORT)).start();
 
-
-        } else {
+        }
+        else {
             fail.setVisibility(View.VISIBLE);
         }
     }
-
 }
+
 
 
 

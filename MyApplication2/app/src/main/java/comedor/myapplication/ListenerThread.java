@@ -62,9 +62,12 @@ class IncomingMSGThread implements Runnable {
             try {
                 String INCOMING = in.readLine();
 
-                //TODO -- ACT DEPENDING ON ID and MSG
+                //TODO -- ACT DEPENDING ON ID and MSG, main delimeter = !!
                 //SERVER_ID=5000 (same as server port??) --- OPS={CONFIRM,UPDATE,CLEAR,INFO}
+                //INCOMING = SID + CLK + MSG , MSG=<TYPE>#<BODY>
+
                 //CLIENT_IDS={0:size_of_CLK} -- OP=UPDATECLKS
+                //INCOMING = ID + CLK
             }
             catch (IOException e) {
                 e.printStackTrace();
