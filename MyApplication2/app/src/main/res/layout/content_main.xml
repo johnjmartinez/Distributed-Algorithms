@@ -45,18 +45,20 @@
         android:id="@+id/editText2"
         android:layout_marginTop="30dp"
         android:layout_below="@+id/editText"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignStart="@+id/editText4"
+        android:layout_alignEnd="@+id/button" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:text="Table #"
         android:textSize="20dp"
-        android:ems="10"
         android:id="@+id/editText3"
-        android:layout_above="@+id/editText4"
-        android:layout_alignStart="@+id/button2" />
+        android:layout_alignStart="@+id/button2"
+        android:layout_toStartOf="@+id/editText2"
+        android:layout_alignBottom="@+id/editText2"
+        android:textAlignment="0"
+        android:layout_alignWithParentIfMissing="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -65,7 +67,8 @@
         android:ems="10"
         android:id="@+id/editText4"
         android:layout_below="@+id/editText2"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignStart="@+id/editText6"
+        android:layout_alignEnd="@+id/button" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -75,17 +78,19 @@
         android:textSize="20dp"
         android:layout_alignBottom="@+id/editText4"
         android:layout_alignStart="@+id/editText3"
-        android:textAlignment="center" />
+        android:textAlignment="0"
+        android:layout_toStartOf="@+id/editText2" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText6"
-        android:layout_below="@+id/editText4"
-        android:layout_alignEnd="@+id/editText"
         android:textColor="#D32F2F"
         android:text="invalid log in"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        android:layout_marginBottom="106dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/button" />
 
 
 

@@ -29,6 +29,7 @@ class ServerReq {
 
             outToServer.println(OUT);
             while (!inFromServer.ready()) {
+                Thread.yield();
             }
 
             //EXPECTED response from server:
@@ -43,6 +44,9 @@ class ServerReq {
             //continue;
         }
 
-       return answer; //raw answer returned
+       //return answer; //raw answer returned
+        return "[1, 0 , 2, 1, 2]!!ACK"; ///TEST
+
+
     }
 }

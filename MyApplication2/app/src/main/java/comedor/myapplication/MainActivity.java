@@ -1,16 +1,14 @@
 package comedor.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
-import android.content.Intent;
+import android.widget.TextView;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
     public final static String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE";
 
@@ -22,10 +20,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**
+         NOT SURE IF NEEDED
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //NOT SURE IF NEEDED
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,11 +33,12 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+         **/
     }
 
     public void display(View view) {
-        EditText fail = (EditText) findViewById(R.id.editText6); //should be Text or popup
-        EditText name = (EditText) findViewById(R.id.editText2);
+        TextView fail =     (TextView) findViewById(R.id.editText6);
+        EditText name =     (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
 
         String user = name.getText().toString();
@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
         if (pwd.equals("rosales") && user.equals("999")) {
             
             //TODO -- Add check so that user is within size of CLK[] ARR
-            MY_PORT = Integer.parseInt(user); //same as ID
+            //MY_PORT = Integer.parseInt(user); //same as ID
+            MY_PORT = 1234; //test
 
             //Expecting initResponse=CLK+MSG, MSG=OK or ACK
             // i.e. "[1, 0 , 2, 1, 2]!!ACK"
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             String MSG = fields[1];
 
             //http://stackoverflow.com/a/7646415/4570161
-            String[] vector = fields[0].replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+            String[] vector = fields[0].replaceAll("\\[|\\]", "").split(",");
             CLK = new Integer[vector.length];
             for (int i = 0; i < vector.length; i++) {
                 try {

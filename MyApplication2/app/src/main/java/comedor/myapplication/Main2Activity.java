@@ -1,31 +1,28 @@
 package comedor.myapplication;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Button;
 
 public class Main2Activity extends AppCompatActivity {
 
+    public final static String EXTRA_MESSAGE = " comedor.myapplication.MESSAGE";
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) { //MENU SCREEN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Intent intent = getIntent();
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //Intent intent = getIntent(); //for?
+        //Button btn = (Button)findViewById(R.id.button3);
 
-        Button btn=(Button)findViewById(R.id.button3);
+    }
 
-        btn.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                Intent myIntent = new Intent(Main2Activity.this, Main22Activity.class);
-                Main2Activity.this.startActivity(myIntent);
-            }
-        });
+    public void checkOut(View view) { //ALWAYS REQUIRE VIEW
+        Intent myIntent = new Intent(this, Main22Activity.class);
+        myIntent.putExtra(EXTRA_MESSAGE, "herd Derp");
+        startActivity(myIntent);
     }
 }
