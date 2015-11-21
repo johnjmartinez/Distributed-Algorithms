@@ -10,30 +10,16 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
-    public final static String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE";
+    public final static String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE"; //?????
 
-    private static Integer MY_PORT;
+    private Integer MY_PORT;
     private static Integer[] CLK = null;
-    private Thread LISTENER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /**
-         NOT SURE IF NEEDED
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-         **/
     }
 
     public void display(View view) {
@@ -69,7 +55,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
             //Start listening for any incoming MSGs from either server or peers
             //TODO -- gotta save thread pointer somehow to access incoming MSGs?
-            new Thread(new ListenerThread(MY_PORT)).start();
+            new Thread(new ListenerThread(MY_PORT, this)).start();
             
             Intent intent = new Intent(this, Main2Activity.class);
             intent.putExtra(EXTRA_MESSAGE, user);
@@ -80,6 +66,10 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             fail.setVisibility(View.VISIBLE);
         }
     }
+
+    //http://stackoverflow.com/questions/5566921/androidpassing-a-hash-map-between-activities
+    //http://stackoverflow.com/questions/4878159/android-whats-the-best-way-to-share-data-between-activities
+    //http://stackoverflow.com/questions/4992097/android-how-to-pass-hashmapstring-string-between-activities
 }
 
 

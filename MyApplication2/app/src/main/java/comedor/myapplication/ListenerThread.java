@@ -13,9 +13,12 @@ class ListenerThread implements Runnable {
 
     private int MY_PORT;
     private ServerSocket listenSckt;
+    private MainActivity originator;
 
-    public ListenerThread (Integer port) {
+    public ListenerThread (MainActivity source, Integer port) {
+        this.originator = source;
         this.MY_PORT = port;
+
     }
 
     public void run() {
