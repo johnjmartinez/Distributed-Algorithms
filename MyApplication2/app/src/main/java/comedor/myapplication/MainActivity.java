@@ -6,13 +6,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-//import android.view.Menu;
-//import android.view.MenuItem;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final static String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +60,14 @@ public class MainActivity extends AppCompatActivity {
         EditText clave = (EditText) findViewById(R.id.editText6);
         EditText name = (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
-        RadioButton boton = (RadioButton) findViewById(R.id.radioButton);
 
         String user = name.getText().toString();
         String pwd = password.getText().toString();
 
         if (pwd.equals("rosales") && user.equals("999")) {
-           // boton.setVisibility(View.VISIBLE);
+            Intent intent = new Intent(this, Main2Activity.class);
+            intent.putExtra(EXTRA_MESSAGE, user);
+            startActivity(intent);
 
 
         } else {
