@@ -7,14 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.content.Intent;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static Integer[] CLK = null;
-    private static Integer MY_PORT;
-    private Thread LISTENER;
+    public final static String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE";
 
+    private static Integer MY_PORT;
+    private static Integer[] CLK = null;
+    private Thread LISTENER;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
     }
 
     public void display(View view) {
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         String pwd = password.getText().toString();
 
         if (pwd.equals("rosales") && user.equals("999")) {
+            
             //TODO -- Add check so that user is within size of CLK[] ARR
             MY_PORT = Integer.parseInt(user); //same as ID
 
@@ -67,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
             //Start listening for any incoming MSGs from either server or peers
             //TODO -- gotta save thread pointer somehow to access incoming MSGs?
             new Thread(new ListenerThread(MY_PORT)).start();
+            
+            Intent intent = new Intent(this, Main2Activity.class);
+            intent.putExtra(EXTRA_MESSAGE, user);
+            startActivity(intent);
 
         }
         else {
