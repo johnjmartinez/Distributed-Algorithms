@@ -12,7 +12,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
     public final static String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE"; //?????
 
-    private Integer MY_PORT;
+    private static Integer MY_PORT;
     private static Integer[] CLK = null;
 
     @Override
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
             //Start listening for any incoming MSGs from either server or peers
             //TODO -- gotta save thread pointer somehow to access incoming MSGs?
-            new Thread(new ListenerThread(MY_PORT, this)).start();
+            new Thread(new ListenerThread(this, MY_PORT)).start();
             
             Intent intent = new Intent(this, Main2Activity.class);
             intent.putExtra(EXTRA_MESSAGE, user);
