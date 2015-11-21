@@ -2,6 +2,7 @@ package com.example.darosale.distributedorderingsystem;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,9 @@ import java.util.Map;
 
 public class TableInfo extends AppCompatActivity {
 
+    public static String user = "default";
+    public static String table = "table0";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +41,9 @@ public class TableInfo extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        MyActivity.updateTableOrder("table1", "Chicken & Waffles", 1);
-        MyActivity.updateTableOrder("table1", "Steak & Potatoes", 1);
-        MyActivity.updateTableOrder("table1", "Burger & Fries", 2);
+        Intent intent = getIntent();
+        table = intent.getStringExtra(TableLayout.EXTRA_MESSAGE);
+        setTitle(MyActivity.user + ": " + table.toUpperCase());
         updateActivity();
     }
 
@@ -54,19 +58,25 @@ public class TableInfo extends AppCompatActivity {
         String formatQty;
         double price = 0;
         int comps = 0;
-        HashMap<String, Integer> x = MyActivity.tableOrders.get("table1");
-        if (MyActivity.tableOrders.get("table1").isEmpty()) {
+        HashMap<String, Integer> x = MyActivity.tableOrders.get(table);
+        if (!MyActivity.tableOrders.containsKey(table)) {
             formatItems = "";
             formatQty = "";
             price = 0;
-        } else {
+        }
+        else if(MyActivity.tableOrders.get(table).isEmpty()){
+            formatItems = "";
+            formatQty = "";
+            price = 0;
+        }
+        else{
             String formatOrder = formatItemsAndQty(x);
             formatItems = formatOrder.split("###")[0];
             formatQty = formatOrder.split("###")[1];
             price = calculateTotal(formatItems, formatQty);
         }
-        if (MyActivity.tableComps.containsKey("table1")) {
-            comps = MyActivity.tableComps.get("table1");
+        if (MyActivity.tableComps.containsKey(table)) {
+            comps = MyActivity.tableComps.get(table);
         }
         order.setText(formatItems);
         qty.setText(formatQty);
@@ -151,17 +161,17 @@ public class TableInfo extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if (MyActivity.tableOrders.containsKey("table1")){
-                            if (MyActivity.tableOrders.get("table1").containsKey(strName)){
-                                int val = MyActivity.tableOrders.get("table1").get(strName);
-                                MyActivity.updateTableOrder("table1", strName, val+1);
+                        if (MyActivity.tableOrders.containsKey(table)){
+                            if (MyActivity.tableOrders.get(table).containsKey(strName)){
+                                int val = MyActivity.tableOrders.get(table).get(strName);
+                                MyActivity.updateTableOrder(table, strName, val+1);
                             }
                             else {
-                                MyActivity.updateTableOrder("table1", strName, 1);
+                                MyActivity.updateTableOrder(table, strName, 1);
                             }
                         }
                         else {
-                            MyActivity.updateTableOrder("table1", strName, 1);
+                            MyActivity.updateTableOrder(table, strName, 1);
                         }
                         updateActivity();
                     }
@@ -179,7 +189,10 @@ public class TableInfo extends AppCompatActivity {
     }
 
     public void deleteFromOrder(View view){
-        if (MyActivity.tableOrders.get("table1").isEmpty()){
+        if (!MyActivity.tableOrders.containsKey(table)){
+            return;
+        }
+        if (MyActivity.tableOrders.get(table).isEmpty()){
             return;
         }
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
@@ -189,7 +202,7 @@ public class TableInfo extends AppCompatActivity {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 TableInfo.this,
                 android.R.layout.select_dialog_singlechoice);
-        String itemsAndQty = formatItemsAndQty(MyActivity.tableOrders.get("table1"));
+        String itemsAndQty = formatItemsAndQty(MyActivity.tableOrders.get(table));
         String[] items = itemsAndQty.split("###")[0].split("\n");
         for (int i = 0; i < items.length; i++) {
             arrayAdapter.add(items[i]);
@@ -212,12 +225,15 @@ public class TableInfo extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        int val = MyActivity.tableOrders.get("table1").get(strName);
+                        int val = MyActivity.tableOrders.get(table).get(strName);
                         if (val==1){
-                            MyActivity.tableOrders.get("table1").remove(strName);
+                            MyActivity.tableOrders.get(table).remove(strName);
                         }
                         else {
-                            MyActivity.tableOrders.get("table1").put(strName, val - 1);
+                            MyActivity.tableOrders.get(table).put(strName, val - 1);
+                        }
+                        if (MyActivity.tableOrders.get(table).isEmpty()){
+                            MyActivity.tableComps.put(table, 0);
                         }
                         updateActivity();
                     }
@@ -235,7 +251,10 @@ public class TableInfo extends AppCompatActivity {
     }
 
     public void addComp(View view){
-        if (MyActivity.tableOrders.get("table1").isEmpty()) {
+        if (!MyActivity.tableOrders.containsKey(table)){
+            return;
+        }
+        if (MyActivity.tableOrders.get(table).isEmpty()){
             return;
         }
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
@@ -244,7 +263,7 @@ public class TableInfo extends AppCompatActivity {
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
         input.setMaxWidth(100);
-        input.setTextAlignment(4);
+        input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         input.setHint("0-100");
         input.setHintTextColor(Color.parseColor("#FFFFECF8"));
         builderSingle.setTitle("Add Comp");
@@ -255,11 +274,10 @@ public class TableInfo extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 int val = Integer.parseInt(input.getText().toString());
-                if (val > 100){
+                if (val > 100) {
                     return;
                 }
-                MyActivity.tableComps.put("table1", val);
-                Log.d("put", "" + MyActivity.tableComps.get("table1"));
+                MyActivity.tableComps.put(table, val);
                 updateActivity();
             }
         });
@@ -270,5 +288,11 @@ public class TableInfo extends AppCompatActivity {
             }
         });
         builderSingle.show();
-        }
     }
+
+    public void cashOut(View view){
+        MyActivity.tableComps.remove(table);
+        MyActivity.tableOrders.remove(table);
+        updateActivity();
+    }
+}

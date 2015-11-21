@@ -17,9 +17,7 @@ import java.util.HashMap;
 public class MyActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE = "com.darosale.distributedorderingsystem.MESSAGE";
-    public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
     public static final HashMap<String, Double> PRICES;
-    public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
     static
     {
         PRICES = new HashMap<String, Double>();
@@ -27,6 +25,11 @@ public class MyActivity extends AppCompatActivity {
         PRICES.put("Steak & Potatoes", 18.99);
         PRICES.put("Burger & Fries", 10.59);
     }
+
+    public static String user = "default";
+    public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
+    public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
+
 
     public static double getItemPrice(String item){
         return PRICES.get(item);
@@ -62,6 +65,7 @@ public class MyActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        setTitle("JDA Restaurant");
     }
 
     @Override
@@ -88,14 +92,14 @@ public class MyActivity extends AppCompatActivity {
 
     public void login(View view){
         EditText usr = (EditText) findViewById(R.id.username1);
-        String user = usr.getText().toString();
+        String setUser = usr.getText().toString();
         EditText pwd = (EditText) findViewById(R.id.pwd1);
         String passwd = pwd.getText().toString();
         TextView invalid = (TextView) findViewById(R.id.invalid1);
-        if (user.equals("david") && passwd.equals("rosales")) {
+        if (setUser.equals("david") && passwd.equals("rosales")) {
             invalid.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(this, TableLayout.class);
-            intent.putExtra(EXTRA_MESSAGE, user);
+            user = setUser;
             startActivity(intent);
         }
         else {

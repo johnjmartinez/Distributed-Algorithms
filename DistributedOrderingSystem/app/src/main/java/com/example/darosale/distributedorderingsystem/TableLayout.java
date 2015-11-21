@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 public class TableLayout extends AppCompatActivity {
 
+    public final static String EXTRA_MESSAGE = "com.darosale.distributedorderingsystem.MESSAGE";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,14 +31,45 @@ public class TableLayout extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Intent intent = getIntent();
-        Button t1 = (Button) findViewById(R.id.table1);
-        t1.setText(intent.getStringExtra(MyActivity.EXTRA_MESSAGE));
+        setTitle("Welcome " + MyActivity.user);
     }
 
     public void viewTable(View view){
+        String table = "default";
+        switch (view.getId()) {
+            case R.id.table1:
+                table = "table1";
+                break;
+            case R.id.table2:
+                table = "table2";
+                break;
+            case R.id.table3:
+                table = "table3";
+                break;
+            case R.id.table4:
+                table = "table4";
+                break;
+            case R.id.table5:
+                table = "table5";
+                break;
+            case R.id.table6:
+                table = "table6";
+                break;
+            case R.id.table7:
+                table = "table7";
+                break;
+            case R.id.table8:
+                table = "table8";
+                break;
+            case R.id.table9:
+                table = "table9";
+                break;
+            case R.id.table10:
+                table = "table10";
+                break;
+        }
         Intent intent = new Intent(this, TableInfo.class);
+        intent.putExtra(EXTRA_MESSAGE, table);
         startActivity(intent);
     }
-
 }

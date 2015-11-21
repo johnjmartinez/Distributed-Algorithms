@@ -179,4 +179,13 @@
         android:textStyle="bold"
         android:textAlignment="textEnd" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay"
+        android:id="@+id/pay1"
+        android:layout_alignBottom="@+id/total1"
+        android:layout_alignStart="@+id/addComp"
+        android:onClick="cashOut" />
+
 </RelativeLayout>
