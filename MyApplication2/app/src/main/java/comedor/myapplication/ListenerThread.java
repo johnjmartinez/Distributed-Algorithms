@@ -60,12 +60,11 @@ class IncomingMSGThread implements Runnable {
 
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                String read = in.readLine();
+                String INCOMING = in.readLine();
 
                 //TODO -- ACT DEPENDING ON ID and MSG
                 //SERVER_ID=5000 (same as server port??) --- OPS={CONFIRM,UPDATE,CLEAR,INFO}
-                //CLIENT_ID={0:size_of_CLK} -- OP=UPDATECLKS
-
+                //CLIENT_IDS={0:size_of_CLK} -- OP=UPDATECLKS
             }
             catch (IOException e) {
                 e.printStackTrace();

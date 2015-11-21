@@ -9,18 +9,9 @@ import android.view.View;
 //import android.view.Menu;
 //import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.RadioButton;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
+//import android.widget.RadioButton;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final Integer SERVER_PORT = 5000; //TEST
-    private static final String SERVER_IP = "128.0.0.1"; //TEST
 
     private static Integer[] CLK;
     private static Integer MY_PORT;
@@ -79,13 +70,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (pwd.equals("rosales") && user.equals("999")) {
             //boton.setVisibility(View.VISIBLE);
-
-
-
             
             //TODO -- Add check so that user is within size of CLK[] ARR
             MY_PORT = Integer.parseInt(user);
-            new Thread(new ListenerThread(MY_PORT)).start(); //gotta save pointer some how?
+
+            String initResponse = ServerReq.out("INIT");
+
+            //TODO -- gotta save pointer somehow to access incoming MSGs?
+            new Thread(new ListenerThread(MY_PORT)).start();
+
 
         } else {
             fail.setVisibility(View.VISIBLE);
