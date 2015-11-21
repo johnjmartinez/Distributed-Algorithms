@@ -70,4 +70,14 @@
         android:textColor="#ff0000"
         android:visibility="invisible" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/button2"
+        android:layout_marginBottom="85dp" />
+
 </RelativeLayout>

@@ -10,6 +10,7 @@
     tools:showIn="@layout/activity_table_info"
     tools:context="com.example.darosale.distributedorderingsystem.TableInfo"
     android:background="@drawable/blue"
+    android:weightSum="100"
     android:focusable="false">
 
     <TextView
@@ -30,7 +31,7 @@
         android:background="#ffffff"
         android:editable="true"
         android:layout_below="@+id/itemsText"
-        android:layout_toStartOf="@+id/comp1" />
+        android:layout_toStartOf="@+id/addComp" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -39,7 +40,8 @@
         android:text="Add"
         android:id="@+id/addItem"
         android:layout_below="@+id/space2"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="addToOrder" />
 
     <Space
         android:layout_width="fill_parent"
@@ -59,31 +61,20 @@
         android:textSize="20dp"
         android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$99.99"
-        android:id="@+id/cost1"
-        android:textStyle="bold"
-        android:textSize="40dp"
-        android:layout_alignBottom="@+id/total1"
-        android:layout_toEndOf="@+id/space" />
-
     <Space
         android:layout_width="50px"
         android:layout_height="20px"
         android:id="@+id/space"
-        android:layout_toEndOf="@+id/addItem"
-        android:layout_alignBottom="@+id/cost1"
-        android:layout_alignTop="@+id/cost1" />
+        android:layout_toEndOf="@+id/addItem" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Comp"
-        android:id="@+id/comp1"
-        android:layout_alignTop="@+id/cost1"
-        android:layout_alignEnd="@+id/space2" />
+        android:id="@+id/addComp"
+        android:layout_alignEnd="@+id/space2"
+        android:onClick="addComp"
+        android:layout_alignTop="@+id/food1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -116,6 +107,76 @@
         android:id="@+id/delItem"
         android:layout_alignBottom="@+id/addItem"
         android:layout_toEndOf="@+id/space"
-        android:onClick="deleteList" />
+        android:onClick="deleteFromOrder" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Food:"
+        android:id="@+id/food1"
+        android:textStyle="bold"
+        android:layout_above="@+id/comps1"
+        android:layout_alignEnd="@+id/total1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comps:"
+        android:id="@+id/comps1"
+        android:textStyle="bold"
+        android:layout_above="@+id/tax1"
+        android:layout_alignEnd="@+id/total1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tax:"
+        android:id="@+id/tax1"
+        android:textStyle="bold"
+        android:layout_above="@+id/total2"
+        android:layout_alignEnd="@+id/total1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$99.99"
+        android:id="@+id/total2"
+        android:textStyle="bold"
+        android:textSize="40dp"
+        android:layout_alignBottom="@+id/total1"
+        android:layout_alignStart="@+id/delItem" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.00"
+        android:id="@+id/tax2"
+        android:layout_alignBottom="@+id/addComp"
+        android:layout_alignStart="@+id/total2"
+        android:layout_alignEnd="@+id/total2"
+        android:textStyle="bold"
+        android:textAlignment="textEnd" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.00"
+        android:id="@+id/comps2"
+        android:layout_above="@+id/tax2"
+        android:layout_alignStart="@+id/tax2"
+        android:layout_alignEnd="@+id/tax2"
+        android:textAlignment="textEnd"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="99.99"
+        android:id="@+id/food2"
+        android:layout_above="@+id/comps2"
+        android:layout_alignStart="@+id/comps2"
+        android:layout_alignEnd="@+id/comps2"
+        android:textStyle="bold"
+        android:textAlignment="textEnd" />
 
 </RelativeLayout>

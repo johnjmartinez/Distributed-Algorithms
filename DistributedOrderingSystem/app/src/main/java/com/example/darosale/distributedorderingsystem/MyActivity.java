@@ -17,9 +17,9 @@ import java.util.HashMap;
 public class MyActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE = "com.darosale.distributedorderingsystem.MESSAGE";
-    public static HashMap<String, HashMap<String, Integer>> tableOrders =
-            new HashMap<String, HashMap<String, Integer>>();
+    public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
     public static final HashMap<String, Double> PRICES;
+    public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
     static
     {
         PRICES = new HashMap<String, Double>();
