@@ -72,4 +72,9 @@ public class TableLayout extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE, table);
         startActivity(intent);
     }
+
+    public void viewOrders(View view){
+        Intent intent = new Intent(this, Queue.class);
+        startActivity(intent);
+    }
 }

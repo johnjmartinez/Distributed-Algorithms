@@ -1,10 +1,15 @@
 package com.example.darosale.distributedorderingsystem;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +23,8 @@ public class MyActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE = "com.darosale.distributedorderingsystem.MESSAGE";
     public static final HashMap<String, Double> PRICES;
-    static
-    {
+
+    static {
         PRICES = new HashMap<String, Double>();
         PRICES.put("Chicken & Waffles", 12.99);
         PRICES.put("Steak & Potatoes", 18.99);
@@ -29,24 +34,43 @@ public class MyActivity extends AppCompatActivity {
     public static String user = "default";
     public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
     public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
+    public static HashMap<String, String> accounts = new HashMap<String, String>();
+
+    static {
+        accounts.put("David", "Rosales");
+    }
+
+    public static HashMap<Integer, String> queue = new HashMap<Integer, String>();
+
+    static {
+        queue.put(1, "Empty");
+        queue.put(2, "Empty");
+        queue.put(3, "Empty");
+        queue.put(4, "Empty");
+        queue.put(5, "Empty");
+        queue.put(6, "Empty");
+        queue.put(7, "Empty");
+        queue.put(8, "Empty");
+        queue.put(9, "Empty");
+        queue.put(10, "Empty");
+    }
 
 
-    public static double getItemPrice(String item){
+    public static double getItemPrice(String item) {
         return PRICES.get(item);
     }
 
-    public static void updateTableOrder(String table, String item, Integer qty){
-        if (tableOrders.containsKey(table)){
+    public static void updateTableOrder(String table, String item, Integer qty) {
+        if (tableOrders.containsKey(table)) {
             tableOrders.get(table).put(item, qty);
-        }
-        else {
+        } else {
             HashMap<String, Integer> newTable = new HashMap<String, Integer>();
             newTable.put(item, qty);
             tableOrders.put(table, newTable);
         }
     }
 
-    public static HashMap<String, Integer> getTableOrder(String table){
+    public static HashMap<String, Integer> getTableOrder(String table) {
         return tableOrders.get(table);
     }
 
@@ -90,20 +114,48 @@ public class MyActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void login(View view){
+    public void login(View view) {
         EditText usr = (EditText) findViewById(R.id.username1);
         String setUser = usr.getText().toString();
         EditText pwd = (EditText) findViewById(R.id.pwd1);
         String passwd = pwd.getText().toString();
         TextView invalid = (TextView) findViewById(R.id.invalid1);
-        if (setUser.equals("david") && passwd.equals("rosales")) {
-            invalid.setVisibility(View.INVISIBLE);
-            Intent intent = new Intent(this, TableLayout.class);
-            user = setUser;
-            startActivity(intent);
-        }
-        else {
+        if (accounts.containsKey(setUser)) {
+            if (passwd.equals(accounts.get(setUser))) {
+                invalid.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(this, TableLayout.class);
+                user = setUser;
+                startActivity(intent);
+            }
+        } else {
             invalid.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void createAccount(View view) {
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(MyActivity.this);
+        builderSingle.setTitle("Create User Account");
+        //builderSingle.setIcon(R.drawable.ic_launcher);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View inflaterView = inflater.inflate(R.layout.create_account, null);
+        builderSingle.setView(inflaterView);
+        builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builderSingle.setPositiveButton("Create", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditText u = (EditText) inflaterView.findViewById(R.id.username2);
+                EditText p = (EditText) inflaterView.findViewById(R.id.password2);
+                String usr = u.getText().toString();
+                String pwd = p.getText().toString();
+                accounts.put(usr, pwd);
+                dialog.dismiss();
+            }
+        });
+        builderSingle.show();
     }
 }

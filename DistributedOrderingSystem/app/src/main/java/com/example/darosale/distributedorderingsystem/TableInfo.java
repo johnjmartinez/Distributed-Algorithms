@@ -144,7 +144,7 @@ public class TableInfo extends AppCompatActivity {
             arrayAdapter.add(items[i]);
         }
 
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -208,7 +208,7 @@ public class TableInfo extends AppCompatActivity {
             arrayAdapter.add(items[i]);
         }
 
-        builderSingle.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -266,7 +266,6 @@ public class TableInfo extends AppCompatActivity {
         input.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         input.setHint("0-100");
         input.setHintTextColor(Color.parseColor("#FFFFECF8"));
-        builderSingle.setTitle("Add Comp");
         builderSingle.setMessage("Enter a percentage amount");
         builderSingle.setView(input);
         builderSingle.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
