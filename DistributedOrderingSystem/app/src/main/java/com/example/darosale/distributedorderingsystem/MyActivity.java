@@ -59,10 +59,14 @@ public class MyActivity extends AppCompatActivity {
 
 
     public static double getItemPrice(String item) {
+        // Method for returning the price of an item
         return PRICES.get(item);
     }
 
     public static void updateTableOrder(String table, String item, Integer qty) {
+        // Method for creating, or updating table orders
+        // Check if the table order is already there, we can just update it
+        // Else we need to instantiate the mapping and the add the item
         if (tableOrders.containsKey(table)) {
             tableOrders.get(table).put(item, qty);
         } else {
@@ -73,6 +77,7 @@ public class MyActivity extends AppCompatActivity {
     }
 
     public static HashMap<String, Integer> getTableOrder(String table) {
+        // Method for returning a tables order
         return tableOrders.get(table);
     }
 
@@ -93,6 +98,7 @@ public class MyActivity extends AppCompatActivity {
         });
         setTitle("JDA Restaurant");
         Log.d("Info", " Starting thread");
+        // Create the TCP listener thread and start it
         ListenerThread lt = new ListenerThread();
         lt.start();
     }
@@ -120,12 +126,15 @@ public class MyActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
+        // Method for handling the login of a user
         EditText usr = (EditText) findViewById(R.id.username1);
         String setUser = usr.getText().toString();
         EditText pwd = (EditText) findViewById(R.id.pwd1);
         String passwd = pwd.getText().toString();
         TextView invalid = (TextView) findViewById(R.id.invalid1);
+        // Check if the user is authorized
         if (accounts.containsKey(setUser)) {
+            // Check if the password matches the user profile
             if (passwd.equals(accounts.get(setUser))) {
                 invalid.setVisibility(View.INVISIBLE);
                 Intent intent = new Intent(this, TableLayout.class);
@@ -133,16 +142,20 @@ public class MyActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         } else {
+            // Display a message to the user about failed authentication
             invalid.setVisibility(View.VISIBLE);
         }
     }
 
     public void createAccount(View view) {
+        // Method for creating a new user account through a popup is generated for user input
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(MyActivity.this);
         builderSingle.setTitle("Create User Account");
         //builderSingle.setIcon(R.drawable.ic_launcher);
         LayoutInflater inflater = this.getLayoutInflater();
+        // Inflate the dialogue xml
         final View inflaterView = inflater.inflate(R.layout.create_account, null);
+        // Set the inflater to the dialogue
         builderSingle.setView(inflaterView);
         builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -157,6 +170,7 @@ public class MyActivity extends AppCompatActivity {
                 EditText p = (EditText) inflaterView.findViewById(R.id.password2);
                 String usr = u.getText().toString();
                 String pwd = p.getText().toString();
+                // Add the user to the account if confirmed
                 accounts.put(usr, pwd);
                 dialog.dismiss();
             }

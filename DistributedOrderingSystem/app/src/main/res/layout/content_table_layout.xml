@@ -172,7 +172,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Order Queue"
+            android:text="Order Schedule"
             android:id="@+id/queue1"
             android:background="@drawable/roundbuttongray"
             android:layout_below="@+id/table5"

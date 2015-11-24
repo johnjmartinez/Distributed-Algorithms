@@ -35,7 +35,9 @@ public class TableLayout extends AppCompatActivity {
     }
 
     public void viewTable(View view){
+        // Method for switching to the TableInfo activity
         String table = "default";
+        // Store the table name that is clicked as a string
         switch (view.getId()) {
             case R.id.table1:
                 table = "table1";
@@ -69,11 +71,13 @@ public class TableLayout extends AppCompatActivity {
                 break;
         }
         Intent intent = new Intent(this, TableInfo.class);
+        // Pass the table clicked to the TableInfo class as a string
         intent.putExtra(EXTRA_MESSAGE, table);
         startActivity(intent);
     }
 
     public void viewOrders(View view){
+        // Method for switching to the Queue activity
         Intent intent = new Intent(this, Queue.class);
         startActivity(intent);
     }
