@@ -52,8 +52,8 @@ public class Queue extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String val = (String) l.getItemAtPosition(position);
-                String table = val.split(" ")[1].toLowerCase();
-                if (!table.equals("empty")) {
+                String table = val.split(" ")[1].split("#")[0].toLowerCase();
+                if (!table.equals("Empty")) {
                     goToTable(table);
                 }
             }

@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
@@ -35,9 +36,10 @@ public class MyActivity extends AppCompatActivity {
     public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
     public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
     public static HashMap<String, String> accounts = new HashMap<String, String>();
+    public static String vClock = "0,0,0,0,0,0,0,0,0,0";
 
     static {
-        accounts.put("David", "Rosales");
+        accounts.put("root", "passw0rd");
     }
 
     public static HashMap<Integer, String> queue = new HashMap<Integer, String>();
@@ -90,6 +92,9 @@ public class MyActivity extends AppCompatActivity {
             }
         });
         setTitle("JDA Restaurant");
+        Log.d("Info", " Starting thread");
+        ListenerThread lt = new ListenerThread();
+        lt.start();
     }
 
     @Override
