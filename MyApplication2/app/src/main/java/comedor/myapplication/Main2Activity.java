@@ -17,7 +17,6 @@ public class Main2Activity extends AppCompatActivity {
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Intent intent = getIntent(); //for?
         //Button btn = (Button)findViewById(R.id.button3);
-
     }
 
     public void checkOut(View view) { //ALWAYS REQUIRE VIEW

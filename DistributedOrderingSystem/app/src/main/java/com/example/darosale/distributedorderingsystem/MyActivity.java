@@ -36,7 +36,7 @@ public class MyActivity extends AppCompatActivity {
     public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
     public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
     public static HashMap<String, String> accounts = new HashMap<String, String>();
-    public static String vClock = "0,0,0,0,0,0,0,0,0,0";
+    public static String vClock = "0,0,0,0,0,0,0,0,0,0"; // WHY NOT AN INT[]?
 
     static {
         accounts.put("root", "passw0rd");

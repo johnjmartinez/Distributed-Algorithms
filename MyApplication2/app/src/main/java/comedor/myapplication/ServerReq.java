@@ -9,12 +9,19 @@ import java.util.Arrays;
 
 /**
  * Created by johnjmar on 11/20/15.
+ *
+ * Class that clients will use to send messages to the Server
+ *
  */
 class ServerReq {
 
-    private static final Integer SERVER_PORT = 5000; //TEST
-    private static final String SERVER_IP = "128.0.0.1"; //TEST
+    //TODO -- AGREE ON THESE VALUES
+    private static final Integer SERVER_PORT = 6000; //TEST -- TBD
+    private static final String SERVER_IP = "localhost"; //TEST -- TBD
 
+    //CLIENT SENDS ID + CLK + MSG TO SERVER, EXPECTS ACK or OK
+    //OUTPUT TO SERVER FOLLOWS THE FOLLOWING STRING FORMAT EXCEPT DURING INIT
+    //"client_id!![v1, v2, v3, v4, ... , vn]!!food_item1=qty1#food_item2=qty2#...#food_itemn=qtyn"
     static String out (Integer ID, Integer[] CLK, String msg) {
 
         Socket clientSckt;
@@ -34,7 +41,7 @@ class ServerReq {
 
             //EXPECTED response from server:
             //OK/ACK or ERROR if attrb check fail. ALWAYS expecting CLK[] on response.
-            //No need for SID since peer initiated connection.
+            //No need for SID since client initiated connection.
             answer = inFromServer.readLine();
             
             clientSckt.close();
@@ -44,9 +51,12 @@ class ServerReq {
             //continue;
         }
 
-       //return answer; //raw answer returned
-        return "[1, 0 , 2, 1, 2]!!ACK"; ///TEST
+        return answer; //raw answer returned
+        //return "[1, 0 , 2, 1, 2]!!ACK"; ///TEST
 
 
     }
+
+
+
 }
