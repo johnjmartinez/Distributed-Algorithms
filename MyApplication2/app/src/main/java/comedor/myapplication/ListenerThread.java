@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 
 /**
  * Created by johnjmar on 11/20/15.
@@ -56,6 +57,8 @@ class IncomingMSGThread implements Runnable {
     private static final String UPDATE = "update";
     private static final String CLEAR = "clear";
     private static final String INFO = "info";
+    private static final String NEW_PEER = "new server";
+
 
     private Socket clientSckt;
     private BufferedReader in;
@@ -86,7 +89,7 @@ class IncomingMSGThread implements Runnable {
                     if (fields.length == 3 ) {
                         updateCLK(Integer.parseInt(SID), fields[1]);
                         processMSG(fields[2]);
-                        //TODO -- Send ACK back to server?
+                        //NOPE! -- Send ACK back to server?
                     }
                 }
                 //CLIENT_IDS={0:size_of_CLK} -- OP=UPDATECLKS
@@ -152,12 +155,15 @@ class IncomingMSGThread implements Runnable {
         String[] fields = fullMsg.split("#");
 
         //TODO -- ACT DEPENDING ON TYPE and MSG
-        switch (fields[0]) { //TYPE
+        switch (fields[0].toLowerCase()) { //TYPE
+            case NEW_PEER:
+
+                break;
             case INFO:
                 //do something with BODY (fields[1])
                 break;
             case CLEAR:
-                //do something with BODY (fields[1])
+                MainActivity.TICKET = new HashMap<>(); //empty body?
                 break;
             case UPDATE:
                 //do something with BODY (fields[1])

@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
     public static final String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE"; //?????
 
-    public static Integer MY_PORT = null;
+    public static final Integer MY_PORT = 1234; //HARDCODED
     public static Integer MY_ID = null;
 
     private static Integer[] CLK = null;
@@ -33,19 +33,16 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         EditText name =     (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
 
-        String user = name.getText().toString();
+        String table_num = name.getText().toString();
         String pwd = password.getText().toString();
 
-        if (pwd.equals("rosales") && user.equals("999")) { ///TODO -- CHANGE THIS TO REAL CASE
+        if (pwd.equals("R0sales")) {
             /**
              * ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
              */
-            Log.d("INIT", "Starting initialization");
 
-            //TODO -- Add check so that user id is within size of CLK[] ARR
-            //MY_PORT = Integer.parseInt(user); //same as ID?
-            MY_PORT = 1234; //test
-            MY_ID = 1; //test
+            Log.d("INIT", "Starting initialization of table " + MY_ID);
+            MY_ID = Integer.parseInt(table_num); //test
 
             Log.d("INIT", " Sending server request msg");
             String answer = ServerReq.out(MY_PORT, CLK, "INIT");
@@ -60,6 +57,8 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             //http://stackoverflow.com/a/7646415/4570161
             Log.d("INIT", "Assigning CLK to Client " + fields[0]);
             String[] vector = fields[0].replaceAll("\\[|\\]", "").split(",");
+
+            //TODO -- Add check so that user id is within size of CLK[] ARR
             CLK = new Integer[vector.length];
             for (int i = 0; i < vector.length; i++) {
                 try {
@@ -71,14 +70,15 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
                 }
             }
 
+            //TODO -- check id has not been taken
             //Start listening for any incoming MSGs from either server or peers
             Log.d("INIT", "Starting client listening thread");
             new Thread(new ListenerThread(MY_PORT)).start();
             TICKET = new HashMap<>();
 
             Log.d("INIT", "Switching view to menu");
-            Intent intent = new Intent(Main2Activity.class);
-            intent.putExtra(EXTRA_MESSAGE, user); //TODO -- not sure if correct.
+            Intent intent = new Intent(this, Main2Activity.class);
+            //intent.putExtra(EXTRA_MESSAGE, user); //TODO -- not sure if correct.
             startActivity(intent);
 
         }
