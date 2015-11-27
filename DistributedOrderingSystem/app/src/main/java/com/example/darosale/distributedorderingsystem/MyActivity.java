@@ -24,6 +24,8 @@ public class MyActivity extends AppCompatActivity {
 
     public final static String EXTRA_MESSAGE = "com.darosale.distributedorderingsystem.MESSAGE";
     public static final HashMap<String, Double> PRICES;
+    public static final int serverPort = 6000;
+    public static final int clientPort = 1234;
 
     static {
         PRICES = new HashMap<String, Double>();
@@ -36,7 +38,8 @@ public class MyActivity extends AppCompatActivity {
     public static HashMap<String, Integer> tableComps = new HashMap<String, Integer>();
     public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
     public static HashMap<String, String> accounts = new HashMap<String, String>();
-    public static String vClock = "0,0,0,0,0,0,0,0,0,0"; // WHY NOT AN INT[]?
+    public static int[] vClock = {0,0,0,0,0,0,0,0,0,0};
+    public static String[] tableIPs = {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
 
     static {
         accounts.put("root", "passw0rd");

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.GpsStatus;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -219,6 +221,11 @@ public class TableInfo extends AppCompatActivity {
                             // If the order didn't exist, we need to create it
                             MyActivity.updateTableOrder(table, strName, 1);
                         }
+                        String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
+                                "!!UPDATE#" + strName;
+                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+                        // Send the update to the table
+                        ListenerThread.TCPCall(ip, cmd);
                         // Update the display info with the new table order
                         updateActivity();
                     }
@@ -282,16 +289,15 @@ public class TableInfo extends AppCompatActivity {
                         dialog.dismiss();
                         int val = MyActivity.tableOrders.get(table).get(strName);
                         // Check if the value of the item being deleted is 1
-                        if (val==1){
+                        if (val == 1) {
                             // Remove the item from the table so that we do not display it again
                             MyActivity.tableOrders.get(table).remove(strName);
-                        }
-                        else {
+                        } else {
                             // The item quantity was more than 1 so we can just seubtract
                             MyActivity.tableOrders.get(table).put(strName, val - 1);
                         }
                         // Check to see if there are any items left in the order
-                        if (MyActivity.tableOrders.get(table).isEmpty()){
+                        if (MyActivity.tableOrders.get(table).isEmpty()) {
                             // Set comps to 0
                             MyActivity.tableComps.put(table, 0);
                         }
@@ -359,12 +365,15 @@ public class TableInfo extends AppCompatActivity {
 
     public void cashOut(View view){
         // Mehtod for handling an order settlement
+
         // Remove the table comp
         MyActivity.tableComps.remove(table);
         // Remove the table order
         MyActivity.tableOrders.remove(table);
         // Clear the display of the table order
         updateActivity();
-        // TODO: Send message to the client that the order was settled
+        String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) + "!!CLEAR#null";
+        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+        ListenerThread.TCPCall(ip, cmd);
     }
 }
