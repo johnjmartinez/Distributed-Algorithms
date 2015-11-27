@@ -301,6 +301,11 @@ public class TableInfo extends AppCompatActivity {
                             // Set comps to 0
                             MyActivity.tableComps.put(table, 0);
                         }
+                        String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
+                                "!!UPDATE#" + strName;
+                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+                        // Send the update to the table
+                        ListenerThread.TCPCall(ip, cmd);
                         // Update the display info with the new table order
                         updateActivity();
                     }
@@ -374,6 +379,7 @@ public class TableInfo extends AppCompatActivity {
         updateActivity();
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) + "!!CLEAR#null";
         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+        // Send the clear call to table
         ListenerThread.TCPCall(ip, cmd);
     }
 }

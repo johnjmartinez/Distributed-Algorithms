@@ -63,6 +63,7 @@ public class ListenerThread extends Thread {
                     // Sync all clients with the new ID/IP lists
                     String clientAddress = sock.getInetAddress().toString();
                     updateIPList(data, clientAddress);
+                    out.println("Broadcast Sent");
                 }
                 Log.d("ListenerThread run()", "Check 10 Transaction complete, closing");
                 // Close the current TCP session

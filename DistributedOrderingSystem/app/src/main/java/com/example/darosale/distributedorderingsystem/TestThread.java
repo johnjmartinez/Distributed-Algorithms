@@ -64,15 +64,16 @@ public class TestThread extends Thread {
                 Log.d("run", "Check 3");
                 if (iter==1) {
                     Log.d("run", "Check 3a");
-                    cmd += "!![1, 0, 0, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!Chicken & Waffles=1";
+                    cmd += "!![1, 0, 0, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!SHRIMP WONTON STIR-FRY=1";
                 }
                 else if (iter==2) {
                     Log.d("run", "Check 3b");
-                    cmd += "!![1, 1, 1, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!Steak & Potatoes=2";
+                    cmd += "!![1, 1, 1, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!CHICKEN CEASAR SALAD=2";
                 }
                 else if (iter==3) {
                     Log.d("run", "Check 3c");
-                    cmd += "!![1, 0, 1, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!Burger & Fries=1#Steak & Potatoes=2";
+                    cmd += "!![1, 0, 1, 0, 0, 0, 0, 0, 0, 0]!!" +
+                            "ORDER!!NEW THE BLAZIN' TEXAN=1#FRESH FRUIT CITRONADE=2";
                 }
                 Log.d("run", "Check 4");
                 Log.d("Info", "TCP call");

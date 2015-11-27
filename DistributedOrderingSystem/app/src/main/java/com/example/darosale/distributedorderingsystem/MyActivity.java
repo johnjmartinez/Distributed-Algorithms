@@ -29,9 +29,16 @@ public class MyActivity extends AppCompatActivity {
 
     static {
         PRICES = new HashMap<String, Double>();
-        PRICES.put("Chicken & Waffles", 12.99);
-        PRICES.put("Steak & Potatoes", 18.99);
-        PRICES.put("Burger & Fries", 10.59);
+        PRICES.put("NEW THE BLAZIN' TEXAN", 15.99);
+        PRICES.put("NEW ALL-DAY BRUNCH BURGER", 10.99);
+        PRICES.put("7OZ GRILLED ONION SIRLOIN WITH STOUT GRAVY", 17.99);
+        PRICES.put("HOT SHOT WHISKEY CHICKEN", 14.99);
+        PRICES.put("SHRIMP WONTON STIR-FRY", 14.99);
+        PRICES.put("TRIPLE CHOCOLATE MELTDOWN", 7.99);
+        PRICES.put("CHICKEN CEASAR SALAD", 9.99);
+        PRICES.put("ORIENTAL CHICKEN SALAD", 9.99);
+        PRICES.put("FRESH FRUIT CITRONADE", 6.99);
+        PRICES.put("HOT FUDGE SUNDAE DESSERT SHOOTER", 7.99);
     }
 
     public static String user = "default";
