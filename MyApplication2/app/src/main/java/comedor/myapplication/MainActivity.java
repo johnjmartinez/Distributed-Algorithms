@@ -8,18 +8,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.net.Inet4Address;
 import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
     public static final String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE"; //?????
-
-    public static final Integer MY_PORT = 1234; //HARDCODED
-    public static Integer MY_ID = null;
-
-    private static Integer[] CLK = null;
-    public static HashMap<String, String> TICKET;
+    public static final Integer CLIENT_PORT = 1234; //HARDCODED
+    public static Integer MY_ID = null;   //SET ON LOGIN
+    private static Integer[] CLK = null;  //RCVD FROM SERVER DURING INIT
+    public static String[] IP_MAP = null; //RCVD FROM SERVER DURING INIT
+    public static HashMap<String, String> TICKET; //MAIN HASH FOR CLIENT INTERACTION
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,52 +28,116 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
     }
 
-    public void display(View view) {
-        TextView fail =     (TextView) findViewById(R.id.editText6);
+    public void display (View view) {
         EditText name =     (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
+        TextView fail =     (TextView) findViewById(R.id.editText6);
 
         String table_num = name.getText().toString();
         String pwd = password.getText().toString();
 
         if (pwd.equals("R0sales")) {
+
             /**
              * ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
              */
 
             Log.d("INIT", "Starting initialization of table " + MY_ID);
-            MY_ID = Integer.parseInt(table_num); //test
+            fail.setVisibility(View.INVISIBLE);
+            MY_ID = Integer.parseInt(table_num); //numbered starting from 1
 
             Log.d("INIT", " Sending server request msg");
-            String answer = ServerReq.out(MY_ID, CLK, "INIT!!");
+            String answer = ServerReq.out(MY_ID, CLK, "INIT!!"); //TODO -- SEND RealID or ID-1?
 
-            //Expecting initResponse=CLK+MSG, MSG=OK or ACK
-            // i.e. "[1, 0 , 2, 1, 2]!!ACK"
-            //TODO -- Add check if MSG contains ERROR (retry?) or ANS does not have enough fields
+            /**
+             * SERVER RESPONSE CHECKS FOLLOW
+             * Expecting initResponse = CLK + TAG + IP_ARRAY, TAG={"OK", "ACK"}
+             * i.e. "[1, 2, 0, 1, 0]!!ACK!![IP1, IP2, 0, IP4, 0]"
+             */
+
+            //Check if MSG contains ERROR (retry?) or ANS does not have enough fields
+            if(answer.equals("") || answer.equals("ERROR") || answer == null) {
+                Log.e("INIT", "Bad response from server");
+                fail.setText("Bad response from server");
+                fail.setVisibility(View.VISIBLE);
+                Log.e("INIT", "Bad response from server");
+                return;
+            }
+
+            //Check fields
             String[] fields = answer.split("!!");
-            String MSG = fields[1];
+            try {
+                if ( fields.length != 3 || fields[0].equals("") || fields[2].equals("") ||
+                        !(fields[1].equals("OK") || fields[1].equals("ACK")) ) {
+                    Log.e("INIT", "Bad response from server "+ answer);
+                    fail.setText("Bad response from server " + answer);
+                    fail.setVisibility(View.VISIBLE);
+                    return;
+                }
+            }
+            catch (Exception e) { // 'if' might throw 'array out of bound' or other exception.
+                Log.e("INIT", "Exception "+ e.toString() + ". Bad response from server "+ answer);
+                fail.setText("Bad response from server: " + answer);
+                fail.setVisibility(View.VISIBLE);
+                return;
+            }
 
+            Log.d("INIT", "Assigning CLK to Client " + fields[0]);
             //String array de-serializer (inverse of Arrays.toString(CLK_ARR))
             //http://stackoverflow.com/a/7646415/4570161
-            Log.d("INIT", "Assigning CLK to Client " + fields[0]);
-            String[] vector = fields[0].replaceAll("\\[|\\]", "").split(",");
+            String[] clk_vector = fields[0].replaceAll("\\[|\\]", "").split(",");
+            IP_MAP = fields[2].replaceAll("\\[|\\]|\\s+", "").split(",");
 
-            //TODO -- Add check so that user id is within size of CLK[] ARR
-            CLK = new Integer[vector.length];
-            for (int i = 0; i < vector.length; i++) {
+            //Check IP_MAP and clk_vector are of same size
+            if( IP_MAP.length !=  clk_vector.length ) {
+                fail.setText("Mismatch in IP map and clk sizes");
+                Log.e("INIT", "Mismatch: ip map size =" + IP_MAP.length + ". clk size" +
+                        clk_vector.length );
+                fail.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            //Check id is within size of CLK[] ARR
+            if( MY_ID > clk_vector.length ) {
+                fail.setText("Invalid table number "+ MY_ID);
+                fail.setVisibility(View.VISIBLE);
+                return;
+            }
+
+            //Check ID matches IP MAP location
+            try {
+                String MY_IP = Inet4Address.getLocalHost().getHostAddress();
+                if (IP_MAP[MY_ID-1] != MY_IP) {
+                    fail.setText("Mismatch of CLIENT IP in IP MAP");
+                    Log.e("INIT", "Mismatch: IP MAP OF MY_ID: " + IP_MAP[MY_ID-1] + ". MY_IP:" + MY_IP);
+                    fail.setVisibility(View.VISIBLE);
+                    return;
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                return;
+            }
+
+            CLK = new Integer[clk_vector.length];
+            for (int i = 0; i < clk_vector.length; i++) {
                 try {
-                    CLK[i] = Integer.parseInt(vector[i]);
+                    CLK[i] = Integer.parseInt(clk_vector[i]);
                 }
                 catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
-                    Log.e("INIT", "Invalid CLK vector component " + vector[i]);
+                    Log.e("INIT", "Invalid CLK vector component " + clk_vector[i]);
+                    fail.setText("BAD CLK!!!");
+                    fail.setVisibility(View.VISIBLE);
+                    return;
                 }
             }
 
-            //TODO -- check id has not been taken
-            //Start listening for any incoming MSGs from either server or peers
+            /**
+             * Start listening for any incoming MSGs from either server or peers
+             */
             Log.d("INIT", "Starting client listening thread");
-            new Thread(new ListenerThread(MY_PORT)).start();
+            new Thread(new ListenerThread(CLIENT_PORT)).start();
             TICKET = new HashMap<>();
 
             Log.d("INIT", "Switching view to menu");
@@ -96,14 +160,6 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     }
 
     synchronized public static void tickCLK() {
-        CLK[MY_ID]++;
+        CLK[MY_ID-1]++;
     }
-
-
 }//end MainActivity
-
-
-
-
-
-

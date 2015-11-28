@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,25 +51,22 @@ public class Main22Activity extends AppCompatActivity {
     public void broadcastPeers(Integer[] clk) {
 
         Log.d("PEER_BRDCAST", "Starting broadcast of clk "+ clk);
-        int numClients=clk.length;
 
-        for (int i = 0; i < numClients; i++) {
-            if (i == MainActivity.MY_ID) { continue; }
-            new Thread(new PeerMsg(i+1, clk)).start();
+        for (int i = 0; i < clk.length; i++) {
+            if (i+1 == MainActivity.MY_ID) { continue; }
+            new Thread(new PeerMsg( MainActivity.IP_MAP[i], clk )).start();
         }
         Log.d("PEER_BRDCAST", "Done");
-
     }
-
 }
 
 class PeerMsg implements Runnable {
 
-    Integer remotePort;
+    String remoteIP;
     Integer[] clk;
 
-    public PeerMsg(Integer i, Integer c[]){
-        this.remotePort = i; // TODO --- How do i know ADDRESS and PORT FROM i????
+    public PeerMsg(String ip , Integer c[]){
+        this.remoteIP = ip;
         this.clk = c;
     }
 
@@ -80,7 +76,7 @@ class PeerMsg implements Runnable {
         String OUT = MainActivity.MY_ID.toString() + "!!" + Arrays.toString(clk);
 
         try {
-            sckt = new Socket(InetAddress.getByName("localhost"), remotePort);
+            sckt = new Socket(remoteIP, MainActivity.CLIENT_PORT);
             PrintWriter outToPeer = new PrintWriter(sckt.getOutputStream(), true);
 
             outToPeer.println(OUT);
@@ -88,9 +84,7 @@ class PeerMsg implements Runnable {
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.e("PEER_BRDCAST", "IOException caught " + e.toString() + ". Dest:" + remotePort);
+            Log.e("PEER_BRDCAST", "IOException caught " + e.toString() + ". Dest:" + remoteIP);
         }
-
     }
-
 }

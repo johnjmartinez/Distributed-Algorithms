@@ -19,7 +19,7 @@ class ListenerThread implements Runnable {
 
     private int MY_PORT;
     private ServerSocket listenSckt;
-    //private MainActivity originator;
+    //NOT USED -- private MainActivity originator;
 
     public ListenerThread (Integer port) {
         //this.originator = source;
@@ -52,13 +52,12 @@ class ListenerThread implements Runnable {
 
 class IncomingMSGThread implements Runnable {
 
-    //TODO -- define all possible incoming messages from server
-    private static final String CONFIRM = "confirm";
+    //define all possible incoming messages from server
+    //NOT USED -- private static final String CONFIRM = "confirm";
     private static final String UPDATE = "update";
     private static final String CLEAR = "clear";
     private static final String INFO = "info";
-    private static final String NEW_PEER = "new server";
-
+    private static final String NEW_PEER = "new table";
 
     private Socket clientSckt;
     private BufferedReader in;
@@ -82,9 +81,9 @@ class IncomingMSGThread implements Runnable {
                 String INCOMING = in.readLine();
                 String[] fields = INCOMING.split("!!"); //main delimeter = !!
 
-                //SERVER_ID=6000 (same as server port??) --- OPS={CONFIRM,UPDATE,CLEAR,INFO}
-                //INCOMING = SID + CLK + +TAG + MSG
-                String SID = "6000"; //TODO -- SET SERVER ID ACCORDINGLY
+                //SERVER_ID=6000 (same as server port??) --- OPS={<see below>}
+                //INCOMING = SID + CLK + TAG + MSG
+                String SID = "6000"; //SET SERVER ID ACCORDINGLY (SID==PORT)
                 if (fields[0].equals(SID)) {
                     if (fields.length == 4 ) {
                         updateCLK(Integer.parseInt(SID), fields[1]);
@@ -92,23 +91,30 @@ class IncomingMSGThread implements Runnable {
                         //NOPE! -- Send ACK back to server?
                     }
                 }
+
                 //CLIENT_IDS={0:size_of_CLK} -- OP=UPDATECLKS
                 //INCOMING = ID + CLK
                 else {
                     if (fields.length == 2) {
-                        try {
-                            Integer ID = Integer.parseInt(fields[1]);
-                            //TODO -- check ID is valid
+                        Integer ID = Integer.parseInt(fields[1]);
+
+                        //Check ID is valid --- getting real ID, NOT id-1
+                        if (ID > MainActivity.getCLK().length ||
+                                MainActivity.IP_MAP[ID - 1] != clientSckt.getInetAddress().getHostAddress()) {
+                            throw new IllegalStateException("Invalid IP in Listener Thread");
+                        }
+                        else {
                             updateCLK(ID, fields[1]);
                         }
-                        catch (Exception e) { e.printStackTrace(); }
+                    }
+                    else {
+                        throw new IllegalStateException("Invalid MSG received " + INCOMING);
                     }
                 }
             }
-            catch (IOException e) {
+            catch (Exception e) {
                 e.printStackTrace();
-                Log.e("LISTENER", "IOException caught " + e.toString());
-
+                Log.e("LISTENER", "Exception caught " + e.toString());
             }
         }//end while
     }//end run
@@ -153,25 +159,24 @@ class IncomingMSGThread implements Runnable {
 
     public void processMSG(String tag, String msg ) {
 
-        //TODO -- check if msg == null || empty
-        String[] fields = msg.split("#");
+        String[] fields = null;
 
-        //TODO -- ACT DEPENDING ON TYPE and MSG with POPUPS
+        //CHECKS on msg string
+        if (msg == null || msg == "") { fields = new String[0]; }
+        else { fields = msg.split("#"); }
+
+        //ACT DEPENDING ON TAG and MSG BODY WITH POPUPS
         switch (tag.toLowerCase()) { //TYPE
-            case NEW_PEER:
-
-                break;
-            case INFO:
-                //do something with BODY (fields[1])
+            case NEW_PEER: //SID!!CLK!!NEW TABLE!!IP_ARRAY
+            case INFO:     //SID!!CLK!!INFO!!IP_ARRAY
+                //No need to use fields since msg = IP_ARRAY
+                MainActivity.IP_MAP = msg.replaceAll("\\[|\\]|\\s+", "").split(",");
                 break;
             case CLEAR:
-                MainActivity.TICKET = new HashMap<>(); //empty body?
+                MainActivity.TICKET = new HashMap<>(); //body == null
                 break;
             case UPDATE:
-                //do something with BODY (fields[1])
-                break;
-            case CONFIRM:
-                //do something with BODY (fields[1])
+                //do something with msg
                 break;
             default:
                 //throw ERROR or something

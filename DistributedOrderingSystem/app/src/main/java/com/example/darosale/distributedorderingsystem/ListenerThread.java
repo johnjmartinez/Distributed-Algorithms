@@ -63,6 +63,8 @@ public class ListenerThread extends Thread {
                     // Sync all clients with the new ID/IP lists
                     String clientAddress = sock.getInetAddress().toString();
                     updateIPList(data, clientAddress);
+                    //TODO -- JJM -- I'm expecting CLK!!OKorACK!!IP_ARRAY directly from server
+                    //Not sure listener thread of  init'd table will make it in time to rcv the broadcast
                     out.println("Broadcast Sent");
                 }
                 Log.d("ListenerThread run()", "Check 10 Transaction complete, closing");
@@ -262,7 +264,7 @@ public class ListenerThread extends Thread {
     public void broadcastIPs(){
         // Method for broadcasting the IP address list to all clients
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                "INFO#" + Arrays.toString(MyActivity.tableIPs);
+                "!!INFO!!" + Arrays.toString(MyActivity.tableIPs); //SID!!CLK!!INFO!!IP_ARRAY
         // Loop through each index in IP list
         for (int i=0; i<10; i++){
             // Check to see if there is an IP address for this table index
