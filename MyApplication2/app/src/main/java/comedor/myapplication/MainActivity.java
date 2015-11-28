@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             MY_ID = Integer.parseInt(table_num); //test
 
             Log.d("INIT", " Sending server request msg");
-            String answer = ServerReq.out(MY_PORT, CLK, "INIT");
+            String answer = ServerReq.out(MY_ID, CLK, "INIT!!");
 
             //Expecting initResponse=CLK+MSG, MSG=OK or ACK
             // i.e. "[1, 0 , 2, 1, 2]!!ACK"
@@ -98,9 +98,6 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     synchronized public static void tickCLK() {
         CLK[MY_ID]++;
     }
-
-
-
 
 
 }//end MainActivity

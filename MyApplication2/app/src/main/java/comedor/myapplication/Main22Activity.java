@@ -27,13 +27,14 @@ public class Main22Activity extends AppCompatActivity {
         String ticket = serializeTicket(MainActivity.TICKET);
         Log.d("CONFIRM", "Sending ticket to server\n"+ticket);
 
-        String tag = "ORDER";
+        MainActivity.tickCLK();
+
+        String tag = "ORDER!!";
         Integer[] clk = MainActivity.getCLK();
 
         broadcastPeers(clk);
         ServerReq.out(MainActivity.MY_ID, clk, tag + ticket);
 
-        MainActivity.tickCLK();
         Log.d("CONFIRM", "DONE");
 
     }
@@ -42,7 +43,7 @@ public class Main22Activity extends AppCompatActivity {
 
         String out="";
         for( Map.Entry<String, String> entry : t.entrySet()) {
-            out += "#"+entry.getKey()+"="+entry.getValue();
+            out += entry.getKey()+"="+entry.getValue()+"#";
         }
         return out;
     }
@@ -90,13 +91,6 @@ class PeerMsg implements Runnable {
             Log.e("PEER_BRDCAST", "IOException caught " + e.toString() + ". Dest:" + remotePort);
         }
 
-
-
-
-
     }
-
-
-
 
 }

@@ -21,12 +21,12 @@ class ServerReq {
 
     //CLIENT SENDS ID + CLK + MSG TO SERVER, EXPECTS ACK or OK
     //OUTPUT TO SERVER FOLLOWS THE FOLLOWING STRING FORMAT EXCEPT DURING INIT
-    //"client_id!![v1, v2, v3, v4, ... , vn]!!food_item1=qty1#food_item2=qty2#...#food_itemn=qtyn"
-    static String out (Integer ID, Integer[] CLK, String msg) {
+    //"client_id!![v1, v2, v3, v4, ... , vn]!!ORDER!!food_item1=qty1#food_item2=qty2#...#food_itemn=qtyn"
+    static String out (Integer ID, Integer[] CLK, String tagNmsg) {
 
         Socket clientSckt;
         String answer = "ERROR";
-        String OUT = ID.toString() + "!!" + Arrays.toString(CLK) + "!!" + msg;
+        String OUT = ID.toString() + "!!" + Arrays.toString(CLK) + "!!" + tagNmsg;
 
         try {
             clientSckt = new Socket(InetAddress.getByName(SERVER_IP), SERVER_PORT);

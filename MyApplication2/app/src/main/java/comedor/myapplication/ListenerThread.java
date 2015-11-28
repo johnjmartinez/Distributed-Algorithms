@@ -83,12 +83,12 @@ class IncomingMSGThread implements Runnable {
                 String[] fields = INCOMING.split("!!"); //main delimeter = !!
 
                 //SERVER_ID=6000 (same as server port??) --- OPS={CONFIRM,UPDATE,CLEAR,INFO}
-                //INCOMING = SID + CLK + MSG , MSG=<TYPE>#<BODY>
+                //INCOMING = SID + CLK + +TAG + MSG
                 String SID = "6000"; //TODO -- SET SERVER ID ACCORDINGLY
                 if (fields[0].equals(SID)) {
-                    if (fields.length == 3 ) {
+                    if (fields.length == 4 ) {
                         updateCLK(Integer.parseInt(SID), fields[1]);
-                        processMSG(fields[2]);
+                        processMSG(fields[2],fields[3]);
                         //NOPE! -- Send ACK back to server?
                     }
                 }
@@ -97,7 +97,7 @@ class IncomingMSGThread implements Runnable {
                 else {
                     if (fields.length == 2) {
                         try {
-                            Integer ID  =Integer.parseInt(fields[1]);
+                            Integer ID = Integer.parseInt(fields[1]);
                             //TODO -- check ID is valid
                             updateCLK(ID, fields[1]);
                         }
@@ -132,7 +132,6 @@ class IncomingMSGThread implements Runnable {
                 //COMPARE AND SET rcvdCLK vs. localCLK newComponents
                 clk[i] = (clk[i] > newComponent ? clk[i] : newComponent);
 
-
             }
             catch (NumberFormatException nfe) {
                 nfe.printStackTrace();
@@ -147,15 +146,18 @@ class IncomingMSGThread implements Runnable {
 
         MainActivity.updateCLK(clk);
         MainActivity.tickCLK();
+
         Log.d("LISTENER", "CLK update complete");
 
     }
 
-    public void processMSG(String fullMsg) { // MSG=<TYPE>#<BODY>
-        String[] fields = fullMsg.split("#");
+    public void processMSG(String tag, String msg ) {
 
-        //TODO -- ACT DEPENDING ON TYPE and MSG
-        switch (fields[0].toLowerCase()) { //TYPE
+        //TODO -- check if msg == null || empty
+        String[] fields = msg.split("#");
+
+        //TODO -- ACT DEPENDING ON TYPE and MSG with POPUPS
+        switch (tag.toLowerCase()) { //TYPE
             case NEW_PEER:
 
                 break;
