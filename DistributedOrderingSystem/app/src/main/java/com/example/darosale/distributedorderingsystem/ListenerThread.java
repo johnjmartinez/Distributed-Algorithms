@@ -62,10 +62,21 @@ public class ListenerThread extends Thread {
                 if (data[2].equals("INIT")){
                     // Sync all clients with the new ID/IP lists
                     String clientAddress = sock.getInetAddress().toString();
-                    updateIPList(data, clientAddress);
-                    //TODO -- JJM -- I'm expecting CLK!!OKorACK!!IP_ARRAY directly from server
-                    //Not sure listener thread of  init'd table will make it in time to rcv the broadcast
-                    out.println("Broadcast Sent");
+                    String cmd = "";
+                    // Check if this table ID is already taken
+                    if (data[0].equals("0")){
+                        // Send an error message to the client
+                        cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
+                                "INFO#ERROR: Table ID already in use.";
+                        out.println(cmd);
+                    }
+                    else {
+                        // Send clock and IP list to all clients
+                        cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
+                                "INFO#" + Arrays.toString(MyActivity.tableIPs);
+                        out.println(cmd);
+                        updateIPList(data, clientAddress);
+                    }
                 }
                 Log.d("ListenerThread run()", "Check 10 Transaction complete, closing");
                 // Close the current TCP session
@@ -258,17 +269,21 @@ public class ListenerThread extends Thread {
     public void updateIPList(String[] data, String clientAddress){
         // Method for updating the IP address list and broadcasting it to the current clients
         MyActivity.tableIPs[Integer.parseInt(data[0])] = clientAddress;
-        broadcastIPs();
+        broadcastIPs(Integer.parseInt(data[0]));
     }
 
-    public void broadcastIPs(){
+    public void broadcastIPs(int id){
         // Method for broadcasting the IP address list to all clients
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                "!!INFO!!" + Arrays.toString(MyActivity.tableIPs); //SID!!CLK!!INFO!!IP_ARRAY
+                "INFO#" + Arrays.toString(MyActivity.tableIPs);
         // Loop through each index in IP list
         for (int i=0; i<10; i++){
+            // Check if this is the new table
+            if (i==id){
+                // Skip this message as it has already been sent
+            }
             // Check to see if there is an IP address for this table index
-            if (!MyActivity.tableIPs[i].equals("0")){
+            else if (!MyActivity.tableIPs[i].equals("0")){
                 // Make a TCP call sending the new IP lists
                 TCPCall(MyActivity.tableIPs[i], cmd);
             }

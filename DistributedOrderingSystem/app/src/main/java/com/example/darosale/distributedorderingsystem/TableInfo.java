@@ -172,7 +172,7 @@ public class TableInfo extends AppCompatActivity {
         // Method for handling popup dialogue for adding an item to an order
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
         //builderSingle.setIcon(R.drawable.ic_launcher);
-        builderSingle.setTitle("Select Item to Delete");
+        builderSingle.setTitle("Select Item to Add");
         // Use a single choice list for our dialogue
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 TableInfo.this,
@@ -206,21 +206,30 @@ public class TableInfo extends AppCompatActivity {
                         dialog.dismiss();
                         // Check if the order was previously placed
                         if (MyActivity.tableOrders.containsKey(table)){
+                            Log.d("Check", "Add to order 1");
                             // Check if the order already has this item in it
                             if (MyActivity.tableOrders.get(table).containsKey(strName)){
+                                Log.d("Check", "Add to order 2");
                                 // If the item was already there, we need to update the quantity
                                 int val = MyActivity.tableOrders.get(table).get(strName);
-                                MyActivity.updateTableOrder(table, strName, val+1);
+                                Log.d("Check", "Add to order 3");
+                                MyActivity.updateTableOrder(table, strName, val + 1);
+                                Log.d("Check", "Add to order 4");
                             }
                             else {
+                                Log.d("Check", "Add to order 5");
                                 // If the item wasn't there, we just add a single item to the order
                                 MyActivity.updateTableOrder(table, strName, 1);
+                                Log.d("Check", "Add to order 6");
                             }
                         }
                         else {
+                            Log.d("Check", "Add to order 7");
                             // If the order didn't exist, we need to create it
                             MyActivity.updateTableOrder(table, strName, 1);
+                            Log.d("Check", "Add to order 8");
                         }
+                        Log.d("Check", "Add to order 9");
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "!!UPDATE#" + strName;
                         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
