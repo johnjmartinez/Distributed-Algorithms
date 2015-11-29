@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
-    public static final String EXTRA_MESSAGE = "com.ajaramillo.distributedorderingsystem.MESSAGE"; //?????
     public static final Integer CLIENT_PORT = 1234; //HARDCODED
     public static Integer MY_ID = null;   //SET ON LOGIN
     private static Integer[] CLK = null;  //RCVD FROM SERVER DURING INIT
@@ -36,12 +35,12 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         String table_num = name.getText().toString();
         String pwd = password.getText().toString();
 
-        if (pwd.equals("R0sales")) {
+        if (pwd.equals("Rosales"))  {
 
             /**
              * ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
              */
-
+        
             Log.d("INIT", "Starting initialization of table " + MY_ID);
             fail.setVisibility(View.INVISIBLE);
             MY_ID = Integer.parseInt(table_num); //numbered starting from 1
@@ -142,7 +141,6 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
             Log.d("INIT", "Switching view to menu");
             Intent intent = new Intent(this, Main2Activity.class);
-            //intent.putExtra(EXTRA_MESSAGE, user); //TODO -- not sure if correct.
             startActivity(intent);
 
         }

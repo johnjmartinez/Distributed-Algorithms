@@ -58,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/texas"
+                android:onClick="increment"
                 android:id="@+id/imagen1" />
 
             <TextView
@@ -97,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/brunch"
                 android:layout_below="@+id/imagen1"
+                android:onClick="increment"
                 android:id="@+id/imagen2" />
 
             <TextView
@@ -137,6 +139,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/sirlion"
                 android:layout_below="@+id/imagen2"
+                android:onClick="increment"
                 android:id="@+id/imagen3" />
 
             <TextView
@@ -177,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/chicken"
                 android:layout_below="@+id/imagen3"
+                android:onClick="increment"
                 android:id="@+id/imagen4" />
 
             <TextView
@@ -217,6 +221,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/shrimp"
                 android:layout_below="@+id/imagen4"
+                android:onClick="increment"
                 android:id="@+id/imagen5" />
 
             <TextView
@@ -258,6 +263,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/dessert"
                 android:layout_below="@+id/imagen5"
+                android:onClick="increment"
                 android:id="@+id/imagen6" />
 
             <TextView
@@ -299,6 +305,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/cesar"
                 android:layout_below="@+id/imagen6"
+                android:onClick="increment"
                 android:id="@+id/imagen7" />
 
             <TextView
@@ -340,6 +347,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/oriental"
                 android:layout_below="@+id/imagen7"
+                android:onClick="increment"
                 android:id="@+id/imagen8" />
 
             <TextView
@@ -381,6 +389,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/fresh"
                 android:layout_below="@+id/imagen8"
+                android:onClick="increment"
                 android:id="@+id/imagen9" />
 
             <TextView
@@ -422,6 +431,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/fudge"
                 android:layout_below="@+id/imagen9"
+                android:onClick="increment"
                 android:id="@+id/imagen10" />
 
             <TextView
@@ -447,5 +457,25 @@
         android:text="CHECK OUT"
         android:id="@+id/button3"
         android:onClick="checkOut"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:textColor="#000000"
+        android:paddingTop="12dp"
+        android:id="@+id/quantity"
+        android:paddingRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/carrito3"
+        android:paddingRight="10dp"
+        android:layout_toLeftOf="@+id/quantity"
+        android:id="@+id/carrito" />
 
 </RelativeLayout>
