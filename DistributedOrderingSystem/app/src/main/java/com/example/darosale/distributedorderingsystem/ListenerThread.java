@@ -67,7 +67,7 @@ public class ListenerThread extends Thread {
                     if (data[0].equals("0")){
                         // Send an error message to the client
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "INFO#ERROR: Table ID already in use.";
+                                "INFO#ERROR: Table ID already in use";
                         out.println(cmd);
                     }
                     else {
