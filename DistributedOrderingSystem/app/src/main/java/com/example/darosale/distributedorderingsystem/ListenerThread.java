@@ -72,6 +72,7 @@ public class ListenerThread extends Thread {
                     }
                     else {
                         // Send clock and IP list to all clients
+                        updateIPList(data, clientAddress);
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "ACK#" + Arrays.toString(MyActivity.tableIPs);
                         out.println(cmd);
@@ -79,7 +80,7 @@ public class ListenerThread extends Thread {
                         in.close();
                         sock.close();
                         srv.close();
-                        updateIPList(data, clientAddress);
+                        broadcastIPs(Integer.parseInt(data[0]));
                         continue;
                     }
                 }
@@ -274,7 +275,6 @@ public class ListenerThread extends Thread {
     public void updateIPList(String[] data, String clientAddress){
         // Method for updating the IP address list and broadcasting it to the current clients
         MyActivity.tableIPs[Integer.parseInt(data[0])-1] = clientAddress;
-        broadcastIPs(Integer.parseInt(data[0]));
     }
 
     public void broadcastIPs(int id){
