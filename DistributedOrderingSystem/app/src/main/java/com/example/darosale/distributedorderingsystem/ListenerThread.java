@@ -268,7 +268,7 @@ public class ListenerThread extends Thread {
 
     public void updateIPList(String[] data, String clientAddress){
         // Method for updating the IP address list and broadcasting it to the current clients
-        MyActivity.tableIPs[Integer.parseInt(data[0])] = clientAddress;
+        MyActivity.tableIPs[Integer.parseInt(data[0])-1] = clientAddress;
         broadcastIPs(Integer.parseInt(data[0]));
     }
 
