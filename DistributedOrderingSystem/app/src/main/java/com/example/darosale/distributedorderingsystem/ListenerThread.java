@@ -64,7 +64,7 @@ public class ListenerThread extends Thread {
                     String clientAddress = sock.getInetAddress().toString();
                     String cmd = "";
                     // Check if this table ID is already taken
-                    if (data[0].equals("0")){
+                    if (MyActivity.tableIPs[Integer.parseInt(data[0])-1].equals("0")){
                         // Send an error message to the client
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "INFO#ERROR: Table ID already in use";
