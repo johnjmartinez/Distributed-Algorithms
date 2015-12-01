@@ -73,9 +73,14 @@ public class ListenerThread extends Thread {
                     else {
                         // Send clock and IP list to all clients
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "INFO#" + Arrays.toString(MyActivity.tableIPs);
+                                "ACK#" + Arrays.toString(MyActivity.tableIPs);
                         out.println(cmd);
+                        out.close();
+                        in.close();
+                        sock.close();
+                        srv.close();
                         updateIPList(data, clientAddress);
+                        continue;
                     }
                 }
                 Log.d("ListenerThread run()", "Check 10 Transaction complete, closing");
