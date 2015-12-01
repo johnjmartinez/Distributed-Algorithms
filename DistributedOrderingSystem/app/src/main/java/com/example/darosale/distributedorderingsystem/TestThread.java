@@ -58,8 +58,8 @@ public class TestThread extends Thread {
             while (true) {
                 Log.d("run", "Check 1");
                 Log.d("Check", "ID: " + iter);
-                Log.d("Info", "Sleeping for 20 seconds");
-                sleep(20000);
+                Log.d("Info", "Sleeping for 10 seconds");
+                sleep(10000);
                 cmd = "" + iter;
                 Log.d("run", "Check 3");
                 if (iter==1) {

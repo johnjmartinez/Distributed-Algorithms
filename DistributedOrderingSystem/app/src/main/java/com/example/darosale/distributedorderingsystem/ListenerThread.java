@@ -1,6 +1,8 @@
 package com.example.darosale.distributedorderingsystem;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -65,7 +67,16 @@ public class ListenerThread extends Thread {
                     // Accept the order
                     acceptOrder(data);
                     out.println("Order accepted");
+                    Handler handler = new Handler(Looper.getMainLooper());
 
+                    handler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Toast.makeText(app.getApplicationContext(), "Incoming order",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
                 else if (data[2].equals("INIT")){
                     // Sync all clients with the new ID/IP lists
@@ -77,8 +88,6 @@ public class ListenerThread extends Thread {
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "INFO!!ERROR: Table ID already in use";
                         out.println(cmd);
-                        Toast.makeText(app.getApplicationContext(), "New order received",
-                                Toast.LENGTH_LONG).show();
                     }
                     else {
                         // Send clock and IP list to all clients
