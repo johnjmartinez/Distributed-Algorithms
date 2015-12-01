@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
             Log.d("INIT", "Starting initialization of table " + MY_ID);
             fail.setVisibility(View.INVISIBLE);
-            MY_ID = Integer.parseInt(table_num); //numbered starting from 1
+            MY_ID = Integer.parseInt(table_num); //numbered starting from 1 -- real id == table id
 
             Log.d("INIT", " Sending server request msg");
             String answer = ServerReq.out(MY_ID, CLK, "INIT!!");
