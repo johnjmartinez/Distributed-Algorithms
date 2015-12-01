@@ -15,6 +15,14 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+
+    }
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        quantity = MainActivity.getQuantity();
+        display(quantity);
     }
 
     public void increment(View view) {

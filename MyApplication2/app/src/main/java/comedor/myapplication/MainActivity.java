@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.net.Inet4Address;
 import java.util.HashMap;
 
 
@@ -89,11 +88,11 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         String table_num = name.getText().toString();
         String pwd = password.getText().toString();
 
-        if (pwd.equals("rosales"))  {
+        if (pwd.equals("rosales") && (table_num.equals("999")))  {
 
         /**
         *  ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
-        */
+
 
             Log.d("INIT", "Starting initialization of table " + MY_ID);
             fail.setVisibility(View.INVISIBLE);
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
              * SERVER RESPONSE CHECKS FOLLOW
              * Expecting initResponse = SID + CLK + TAG + IP_ARRAY, TAG={"OK", "ACK"}
              * i.e. "6000!![1, 2, 0, 1, 0]!!ACK!![IP1, IP2, 0, IP4, 0]"
-             */
+
 
             //Check if MSG contains ERROR (retry?) or ANS does not have enough fields
             if(answer.equals("") || answer.contains("ERROR") || answer == null) {

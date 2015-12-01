@@ -18,9 +18,6 @@ import java.util.Map;
 
 public class Main22Activity extends AppCompatActivity {
 
-
-    public static String item = "NEW THE BLAZIN' TEXAN";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) { //CONFIRM SCREEN
         super.onCreate(savedInstanceState);
@@ -173,7 +170,7 @@ public class Main22Activity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         // Check if the order was previously placed
-                        if (MainActivity.foodQuantity.containsKey(item)){
+                        if (MainActivity.foodQuantity.containsKey(strName)){
                             Log.d("Check", "Add to order 1");
                             // Check if the order already has this item in it
                             if (MainActivity.foodQuantity.containsKey(strName)){

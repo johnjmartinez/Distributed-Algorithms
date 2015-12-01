@@ -32,7 +32,8 @@
             android:name=".Main22Activity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Main22Activity" />
+                android:value=".Main22Activity"
+                />
         </activity>
 
     </application>
