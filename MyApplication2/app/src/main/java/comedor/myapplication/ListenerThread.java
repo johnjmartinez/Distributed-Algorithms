@@ -1,6 +1,10 @@
 package comedor.myapplication;
 
+import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,10 +23,10 @@ class ListenerThread implements Runnable {
 
     private int MY_PORT;
     private ServerSocket listenSckt;
-    //NOT USED -- private MainActivity originator;
+    private final Application app;
 
-    public ListenerThread (Integer port) {
-        //this.originator = source;
+    public ListenerThread (Integer port, Application source) {
+        this.app = source;
         this.MY_PORT = port;
     }
 
@@ -39,7 +43,7 @@ class ListenerThread implements Runnable {
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 socket = listenSckt.accept();
-                IncomingMSGThread msgThread = new IncomingMSGThread(socket);
+                IncomingMSGThread msgThread = new IncomingMSGThread(socket, app);
 
                 new Thread(msgThread).start();
             }
@@ -58,11 +62,13 @@ class IncomingMSGThread implements Runnable {
     private static final String CLEAR = "clear";
     private static final String INFO = "info";
     private static final String NEW_PEER = "new table";
+    private final Application app;
 
     private Socket clientSckt;
     private BufferedReader in;
 
-    public IncomingMSGThread(Socket clientSocket) {
+    public IncomingMSGThread(Socket clientSocket, Application source) {
+        this.app = source;
         this.clientSckt = clientSocket;
         try {
             this.in =
@@ -157,7 +163,22 @@ class IncomingMSGThread implements Runnable {
 
     }
 
-    public void processMSG(String tag, String msg ) {
+    public void displayToast(final String msg, final Application app) {
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(app.getApplicationContext(), msg,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
+
+    public void processMSG( String tag, String msg ) {
 
         String[] fields = null;
 
@@ -171,22 +192,26 @@ class IncomingMSGThread implements Runnable {
             case INFO:     //SID!!CLK!!INFO!!IP_ARRAY
                 //No need to use fields since msg = IP_ARRAY
                 MainActivity.IP_MAP = msg.replaceAll("\\[|\\]|\\s+", "").split(",");
+                displayToast("New Peer", app);
                 break;
             case CLEAR:
                 MainActivity.LIVE_ORDER = false;
                 MainActivity.foodQuantity = new HashMap<>(); //body == null
+                displayToast("Payment received. Thanks!", app);
                 break;
             case UPDATE:
                 //always expecting ONE item ONLY
+                String item = msg.split("=")[0];
                 if ( msg.contains("=-1") ) {
                     //delete 1 from item qty.
-                    MainActivity.removeFromTicket(msg.split("=")[0]);
+                    MainActivity.removeFromTicket(item);
+                    displayToast("Server removed " + item, app);
                 }
                 else if ( msg.contains("=1")) {
                     //add 1 to item qty.
-                    MainActivity.addToTicektOrder(msg.split("=")[0]);
+                    MainActivity.addToTicektOrder(item);
+                    displayToast("Server added "+ item, app);
                 }
-                //TODO -- set toaster
                 break;
             default:
                 //throw ERROR or something

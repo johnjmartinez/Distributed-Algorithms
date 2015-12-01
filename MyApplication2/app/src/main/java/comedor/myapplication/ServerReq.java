@@ -15,9 +15,8 @@ import java.util.Arrays;
  */
 class ServerReq {
 
-    //TODO -- AGREE ON THESE VALUES
     private static final Integer SERVER_PORT = 6000; //TEST -- TBD
-    private static final String SERVER_IP = "localhost"; //TEST -- TBD
+    private static final String SERVER_IP = ""; //TEST -- TBD
 
     //CLIENT SENDS ID + CLK + MSG TO SERVER, EXPECTS ACK or OK
     //OUTPUT TO SERVER FOLLOWS THE FOLLOWING STRING FORMAT EXCEPT DURING INIT

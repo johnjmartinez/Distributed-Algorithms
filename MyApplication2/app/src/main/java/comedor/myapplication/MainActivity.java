@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.net.Inet4Address;
 import java.util.HashMap;
 
 
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         }
     }
 
-
     public static Integer getQuantity(){
         int num = 0;
         for (Integer q: foodQuantity.values()){
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
         /**
         *  ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
-
+        */
 
             Log.d("INIT", "Starting initialization of table " + MY_ID);
             fail.setVisibility(View.INVISIBLE);
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
              * SERVER RESPONSE CHECKS FOLLOW
              * Expecting initResponse = SID + CLK + TAG + IP_ARRAY, TAG={"OK", "ACK"}
              * i.e. "6000!![1, 2, 0, 1, 0]!!ACK!![IP1, IP2, 0, IP4, 0]"
-
+            */
 
             //Check if MSG contains ERROR (retry?) or ANS does not have enough fields
             if(answer.equals("") || answer.contains("ERROR") || answer == null) {
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
              * Start listening for any incoming MSGs from either server or peers
              */
             Log.d("INIT", "Starting client listening thread");
-            new Thread(new ListenerThread(CLIENT_PORT)).start();
+            new Thread(new ListenerThread(CLIENT_PORT, getApplication())).start();
             foodQuantity = new HashMap<>();
 
             Log.d("INIT", "Switching view to menu");

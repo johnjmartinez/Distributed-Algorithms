@@ -2,12 +2,16 @@ package comedor.myapplication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -291,9 +295,19 @@ public class Main22Activity extends AppCompatActivity {
 
         Log.d("CONFIRM", "DONE");
 
-        //TODO -- toaster for success
-        //TODO -- switch to MENU?
+        //toaster for success
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), "Order submitted successfully!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
 
+        //switch to MENU
+        Intent myIntent = new Intent(this, Main2Activity.class);
+        startActivity(myIntent);
 
     }
 
