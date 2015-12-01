@@ -35,9 +35,9 @@ public class ListenerThread extends Thread {
         Log.d("ListenerThread run()", "Check 1 Thread started");
         String msg = "";
         String[] data;
-        Log.d("ListenerThread run()", "Check 2 Starting TestThread");
-        TestThread t = new TestThread();
-        t.start();
+        //Log.d("ListenerThread run()", "Check 2 Starting TestThread");
+        //TestThread t = new TestThread();
+        //t.start();
         // Loop forever listening for incoming requests
         try {
             Log.d("ListenerThread run()", "Check 3 Entering while loop");
@@ -67,16 +67,7 @@ public class ListenerThread extends Thread {
                     // Accept the order
                     acceptOrder(data);
                     out.println("Order accepted");
-                    Handler handler = new Handler(Looper.getMainLooper());
-
-                    handler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Toast.makeText(app.getApplicationContext(), "Incoming order",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    sendToast("Incoming order from Table" + data[0]);
                 }
                 else if (data[2].equals("INIT")){
                     // Sync all clients with the new ID/IP lists
@@ -88,6 +79,7 @@ public class ListenerThread extends Thread {
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "INFO!!ERROR: Table ID already in use";
                         out.println(cmd);
+                        sendToast("Table" + data[0] + " has come online");
                     }
                     else {
                         // Send clock and IP list to all clients
@@ -138,7 +130,7 @@ public class ListenerThread extends Thread {
         Log.d("acceptOrder", "Check 3");
         String[] c = data[1].replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
         Log.d("acceptOrder", "Check 4 " + Arrays.toString(c));
-        placeOrderInQueue(c, Integer.parseInt(data[0])-1);
+        placeOrderInQueue(c, Integer.parseInt(data[0]) - 1);
         Log.d("acceptOrder", "Check 5");
     }
 
@@ -347,5 +339,18 @@ public class ListenerThread extends Thread {
         } catch (IOException exc) {
             Log.d("Error", exc.toString());
         }
+    }
+
+    public void sendToast(final String msg){
+        // Method for creating a toast on the main thread
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(app.getApplicationContext(), msg,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }
