@@ -66,6 +66,14 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     }
 
 
+    public static Integer getQuantity(){
+        int num = 0;
+        for (Integer q: foodQuantity.values()){
+            num += q;
+        }
+        return num;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

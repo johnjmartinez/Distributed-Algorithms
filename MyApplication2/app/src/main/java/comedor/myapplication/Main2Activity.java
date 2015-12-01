@@ -8,17 +8,13 @@ import android.widget.TextView;
 
 public class Main2Activity extends AppCompatActivity {
 
-    int quantity = 0;
-    public final static String EXTRA_MESSAGE = " comedor.myapplication.MESSAGE";
+    int quantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //MENU SCREEN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //Intent intent = getIntent(); //for?
-        //Button btn = (Button)findViewById(R.id.button3);
     }
 
     public void increment(View view) {
@@ -58,7 +54,7 @@ public class Main2Activity extends AppCompatActivity {
                 break;
         }
             MainActivity.addToTicektOrder(item);
-            quantity = quantity + 1;
+            quantity = MainActivity.getQuantity();
             display(quantity);
 
 
@@ -73,7 +69,6 @@ public class Main2Activity extends AppCompatActivity {
 
     public void checkOut(View view) { //ALWAYS REQUIRE VIEW
         Intent myIntent = new Intent(this, Main22Activity.class);
-        myIntent.putExtra(EXTRA_MESSAGE, "herd Derp");
         startActivity(myIntent);
     }
 }
