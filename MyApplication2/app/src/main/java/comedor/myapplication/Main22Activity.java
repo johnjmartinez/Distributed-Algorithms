@@ -252,15 +252,9 @@ public class Main22Activity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            int val = MainActivity.foodQuantity.get(strName);
-                            // Check if the value of the item being deleted is 1
-                            if (val == 1) {
-                                // Remove the item from the table so that we do not display it again
-                                MainActivity.foodQuantity.remove(strName);
-                            } else {
-                                // The item quantity was more than 1 so we can just seubtract
-                                MainActivity.foodQuantity.put(strName, val - 1);
-                            }
+
+                            MainActivity.removeFromTicket(strName);
+
                             // Check to see if there are any items left in the order
                             if (MainActivity.foodQuantity.isEmpty()) {
 
@@ -283,10 +277,10 @@ public class Main22Activity extends AppCompatActivity {
     }
 
 
-    public void sendTicket() {
+    public void sendTicket(View view) {
 
-        String ticket = serializeTicket(MainActivity.TICKET);
-        Log.d("CONFIRM", "Sending ticket to server\n"+ticket);
+        String ticket = serializeTicket(MainActivity.foodQuantity);
+        Log.d("CONFIRM", "Sending ticket to server\n" + ticket);
 
         MainActivity.tickCLK();
 
@@ -296,14 +290,20 @@ public class Main22Activity extends AppCompatActivity {
         broadcastPeers(clk);
         ServerReq.out(MainActivity.MY_ID, clk, tag + ticket);
 
+        MainActivity.LIVE_ORDER = true;
+
         Log.d("CONFIRM", "DONE");
+
+        //TODO -- toaster for success
+        //TODO -- switch to MENU?
+
 
     }
 
-    public String serializeTicket (HashMap<String, String> t) {
+    public String serializeTicket (HashMap<String, Integer> t) {
 
         String out="";
-        for( Map.Entry<String, String> entry : t.entrySet()) {
+        for( Map.Entry<String, Integer> entry : t.entrySet()) {
             out += entry.getKey()+"="+entry.getValue()+"#";
         }
         return out;

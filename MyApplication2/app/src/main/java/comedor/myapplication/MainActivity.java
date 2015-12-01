@@ -17,10 +17,11 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
     public static final Integer CLIENT_PORT = 1234; //HARDCODED
     public static Integer MY_ID = null;   //SET ON LOGIN
-    private static Integer[] CLK = null;  //RCVD FROM SERVER DURING INIT
-    public static String[] IP_MAP = null; //RCVD FROM SERVER DURING INIT
-    public static HashMap<String, String> TICKET;   //Convert hashmap to string, string
+    private static Integer[] CLK = null;  //RCV FROM SERVER DURING INIT
+    public static String[] IP_MAP = null; //RCV FROM SERVER DURING INIT
     public static final HashMap<String, Double> PRICES; //MAIN HASH FOR PRICES
+    public static HashMap<String, Integer> foodQuantity = new HashMap<String, Integer>(); //TICKET
+    public static Boolean LIVE_ORDER = false;
 
     static {
         PRICES = new HashMap<String, Double>();
@@ -41,8 +42,6 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         return PRICES.get(item);
     }
 
-    public static HashMap<String, Integer> foodQuantity = new HashMap<String, Integer>();
-
     public static void addToTicektOrder(String item) {
         // Check if the table order is already there, we can just update it
         // Else we need to instantiate the mapping and the add the item
@@ -53,6 +52,19 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             foodQuantity.put(item, 1);
         }
     }
+
+    public static void removeFromTicket(String item) {
+        int val = MainActivity.foodQuantity.get(item);
+        // Check if the value of the item being deleted is 1
+        if (val == 1) {
+            // Remove the item from the table so that we do not display it again
+            MainActivity.foodQuantity.remove(item);
+        } else {
+            // The item quantity was more than 1 so we can just substract
+            MainActivity.foodQuantity.put(item, val - 1);
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,25 +83,25 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
         if (pwd.equals("rosales"))  {
 
-/**
- * ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
- */
+        /**
+        *  ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
+        */
 
             Log.d("INIT", "Starting initialization of table " + MY_ID);
             fail.setVisibility(View.INVISIBLE);
             MY_ID = Integer.parseInt(table_num); //numbered starting from 1
 
             Log.d("INIT", " Sending server request msg");
-            String answer = ServerReq.out(MY_ID, CLK, "INIT!!"); //TODO -- SEND RealID or ID-1?
+            String answer = ServerReq.out(MY_ID, CLK, "INIT!!");
 
             /**
              * SERVER RESPONSE CHECKS FOLLOW
-             * Expecting initResponse = CLK + TAG + IP_ARRAY, TAG={"OK", "ACK"}
-             * i.e. "[1, 2, 0, 1, 0]!!ACK!![IP1, IP2, 0, IP4, 0]"
+             * Expecting initResponse = SID + CLK + TAG + IP_ARRAY, TAG={"OK", "ACK"}
+             * i.e. "6000!![1, 2, 0, 1, 0]!!ACK!![IP1, IP2, 0, IP4, 0]"
              */
 
             //Check if MSG contains ERROR (retry?) or ANS does not have enough fields
-            if(answer.equals("") || answer.equals("ERROR") || answer == null) {
+            if(answer.equals("") || answer.contains("ERROR") || answer == null) {
                 Log.e("INIT", "Bad response from server");
                 fail.setText("Bad response from server");
                 fail.setVisibility(View.VISIBLE);
@@ -98,10 +110,14 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             }
 
             //Check fields
+            //fields[0] = SID --- no need to check
+            //fields[1] = CLK ARRAY
+            //fields[2] = OK/ACK TAG
+            //fields[3] = IP MAP ARRAY
             String[] fields = answer.split("!!");
             try {
-                if ( fields.length != 3 || fields[0].equals("") || fields[2].equals("") ||
-                        !(fields[1].equals("OK") || fields[1].equals("ACK")) ) {
+                if ( fields.length != 4 || fields[1].equals("") || fields[3].equals("") ||
+                        !(fields[2].equals("OK") || fields[2].equals("ACK")) ) {
                     Log.e("INIT", "Bad response from server "+ answer);
                     fail.setText("Bad response from server " + answer);
                     fail.setVisibility(View.VISIBLE);
@@ -115,11 +131,11 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
                 return;
             }
 
-            Log.d("INIT", "Assigning CLK to Client " + fields[0]);
+            Log.d("INIT", "Assigning CLK to Client " + fields[1]);
             //String array de-serializer (inverse of Arrays.toString(CLK_ARR))
             //http://stackoverflow.com/a/7646415/4570161
-            String[] clk_vector = fields[0].replaceAll("\\[|\\]", "").split(",");
-            IP_MAP = fields[2].replaceAll("\\[|\\]|\\s+", "").split(",");
+            String[] clk_vector = fields[1].replaceAll("\\[|\\]", "").split(",");
+            IP_MAP = fields[3].replaceAll("\\[|\\]|\\s+", "").split(",");
 
             //Check IP_MAP and clk_vector are of same size
             if( IP_MAP.length !=  clk_vector.length ) {
@@ -171,7 +187,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
              */
             Log.d("INIT", "Starting client listening thread");
             new Thread(new ListenerThread(CLIENT_PORT)).start();
-            TICKET = new HashMap<>();
+            foodQuantity = new HashMap<>();
 
             Log.d("INIT", "Switching view to menu");
             Intent intent = new Intent(this, Main2Activity.class);

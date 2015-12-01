@@ -40,8 +40,7 @@ class ServerReq {
             }
 
             //EXPECTED response from server:
-            //OK/ACK or ERROR if attrb check fail. ALWAYS expecting CLK[] on response.
-            //No need for SID since client initiated connection.
+            //OK/ACK or ERROR if attrb check fail. ALWAYS expecting CLK[] on response..
             answer = inFromServer.readLine();
             
             clientSckt.close();
@@ -52,11 +51,6 @@ class ServerReq {
         }
 
         return answer; //raw answer returned
-        //return "[1, 0 , 2, 1, 2]!!ACK"; ///TEST
-
-
+        //return "SID!![1, 0 , 2, 1, 2]!!ACK!![IP MAP]"; ///INIT TEST
     }
-
-
-
 }

@@ -163,7 +163,7 @@ class IncomingMSGThread implements Runnable {
 
         //CHECKS on msg string
         if (msg == null || msg == "") { fields = new String[0]; }
-        else { fields = msg.split("#"); }
+        else if (msg.contains("#")) { fields = msg.split("#"); }
 
         //ACT DEPENDING ON TAG and MSG BODY WITH POPUPS
         switch (tag.toLowerCase()) { //TYPE
@@ -173,10 +173,20 @@ class IncomingMSGThread implements Runnable {
                 MainActivity.IP_MAP = msg.replaceAll("\\[|\\]|\\s+", "").split(",");
                 break;
             case CLEAR:
-                MainActivity.TICKET = new HashMap<>(); //body == null
+                MainActivity.LIVE_ORDER = false;
+                MainActivity.foodQuantity = new HashMap<>(); //body == null
                 break;
             case UPDATE:
-                //do something with msg
+                //always expecting ONE item ONLY
+                if ( msg.contains("=-1") ) {
+                    //delete 1 from item qty.
+                    MainActivity.removeFromTicket(msg.split("=")[0]);
+                }
+                else if ( msg.contains("=1")) {
+                    //add 1 to item qty.
+                    MainActivity.addToTicektOrder(msg.split("=")[0]);
+                }
+                //TODO -- set toaster
                 break;
             default:
                 //throw ERROR or something
