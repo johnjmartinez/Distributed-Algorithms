@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 
@@ -97,19 +98,10 @@ public class MyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         setTitle("JDA Restaurant");
         Log.d("Info", " Starting thread");
         // Create the TCP listener thread and start it
-        ListenerThread lt = new ListenerThread();
+        ListenerThread lt = new ListenerThread(getApplication());
         lt.start();
     }
 

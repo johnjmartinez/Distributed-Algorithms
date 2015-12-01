@@ -1,7 +1,9 @@
 package com.example.darosale.distributedorderingsystem;
 
+import android.app.Application;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,6 +23,11 @@ import java.util.Arrays;
  *
  */
 public class ListenerThread extends Thread {
+    final Application app;
+
+    public ListenerThread(final Application app){
+        this.app = app;
+    }
 
     public void run() {
         Log.d("ListenerThread run()", "Check 1 Thread started");
@@ -58,8 +65,9 @@ public class ListenerThread extends Thread {
                     // Accept the order
                     acceptOrder(data);
                     out.println("Order accepted");
+
                 }
-                if (data[2].equals("INIT")){
+                else if (data[2].equals("INIT")){
                     // Sync all clients with the new ID/IP lists
                     String clientAddress = sock.getInetAddress().toString();
                     String cmd = "";
@@ -67,14 +75,16 @@ public class ListenerThread extends Thread {
                     if (MyActivity.tableIPs[Integer.parseInt(data[0])-1].equals("0")){
                         // Send an error message to the client
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "INFO#ERROR: Table ID already in use";
+                                "INFO!!ERROR: Table ID already in use";
                         out.println(cmd);
+                        Toast.makeText(app.getApplicationContext(), "New order received",
+                                Toast.LENGTH_LONG).show();
                     }
                     else {
                         // Send clock and IP list to all clients
                         updateIPList(data, clientAddress);
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "ACK#" + Arrays.toString(MyActivity.tableIPs);
+                                "ACK!!" + Arrays.toString(MyActivity.tableIPs);
                         out.println(cmd);
                         out.close();
                         in.close();
@@ -111,7 +121,6 @@ public class ListenerThread extends Thread {
         // Loop through the items and update the table orders
         Log.d("acceptOrder", "Check 2");
         for (int i=0; i<items.length; i++) {
-            Log.d("acceptOrder", "Check 2a");
             item = items[i].split("=")[0];
             qty = Integer.parseInt(items[i].split("=")[1]);
             MyActivity.updateTableOrder("table" + data[0], item, qty);
@@ -280,7 +289,7 @@ public class ListenerThread extends Thread {
     public void broadcastIPs(int id){
         // Method for broadcasting the IP address list to all clients
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                "INFO#" + Arrays.toString(MyActivity.tableIPs);
+                "INFO!!" + Arrays.toString(MyActivity.tableIPs);
         // Loop through each index in IP list
         for (int i=0; i<10; i++){
             // Check if this is the new table

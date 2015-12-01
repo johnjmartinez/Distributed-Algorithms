@@ -33,15 +33,6 @@ public class TableInfo extends AppCompatActivity {
         setContentView(R.layout.activity_table_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Get the message string that was passed in from the TableLayout/Queue activity
         Intent intent = getIntent();
@@ -231,7 +222,7 @@ public class TableInfo extends AppCompatActivity {
                         }
                         Log.d("Check", "Add to order 9");
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "!!UPDATE#" + strName;
+                                "!!UPDATE!!" + strName + "=1";
                         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
                         // Send the update to the table
                         ListenerThread.TCPCall(ip, cmd);
@@ -311,7 +302,7 @@ public class TableInfo extends AppCompatActivity {
                             MyActivity.tableComps.put(table, 0);
                         }
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "!!UPDATE#" + strName;
+                                "!!UPDATE!!" + strName + "=-1";
                         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
                         // Send the update to the table
                         ListenerThread.TCPCall(ip, cmd);
@@ -386,7 +377,7 @@ public class TableInfo extends AppCompatActivity {
         MyActivity.tableOrders.remove(table);
         // Clear the display of the table order
         updateActivity();
-        String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) + "!!CLEAR#null";
+        String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) + "!!CLEAR!!null";
         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
         // Send the clear call to table
         ListenerThread.TCPCall(ip, cmd);
