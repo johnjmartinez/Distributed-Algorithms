@@ -14,11 +14,45 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
+
     public static final Integer CLIENT_PORT = 1234; //HARDCODED
     public static Integer MY_ID = null;   //SET ON LOGIN
     private static Integer[] CLK = null;  //RCVD FROM SERVER DURING INIT
     public static String[] IP_MAP = null; //RCVD FROM SERVER DURING INIT
-    public static HashMap<String, String> TICKET; //MAIN HASH FOR CLIENT INTERACTION
+    public static HashMap<String, String> TICKET;   //Convert hashmap to string, string
+    public static final HashMap<String, Double> PRICES; //MAIN HASH FOR PRICES
+
+    static {
+        PRICES = new HashMap<String, Double>();
+        PRICES.put("NEW THE BLAZIN' TEXAN", 15.99);
+        PRICES.put("NEW ALL-DAY BRUNCH BURGER", 10.99);
+        PRICES.put("7OZ GRILLED ONION SIRLOIN WITH STOUT GRAVY", 17.99);
+        PRICES.put("HOT SHOT WHISKEY CHICKEN", 14.99);
+        PRICES.put("SHRIMP WONTON STIR-FRY", 14.99);
+        PRICES.put("TRIPLE CHOCOLATE MELTDOWN", 7.99);
+        PRICES.put("CHICKEN CEASAR SALAD", 9.99);
+        PRICES.put("ORIENTAL CHICKEN SALAD", 9.99);
+        PRICES.put("FRESH FRUIT CITRONADE", 6.99);
+        PRICES.put("HOT FUDGE SUNDAE DESSERT SHOOTER", 7.99);
+    }
+
+    public static double getItemPrice(String item) {
+        // Method for returning the price of an item
+        return PRICES.get(item);
+    }
+
+    public static HashMap<String, Integer> foodQuantity = new HashMap<String, Integer>();
+
+    public static void addToTicektOrder(String item) {
+        // Check if the table order is already there, we can just update it
+        // Else we need to instantiate the mapping and the add the item
+        if (foodQuantity.containsKey(item)) {
+            int x = foodQuantity.get(item);
+            foodQuantity.put(item, x+1);
+        } else {
+            foodQuantity.put(item, 1);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +69,12 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         String table_num = name.getText().toString();
         String pwd = password.getText().toString();
 
-        if (pwd.equals("Rosales"))  {
+        if (pwd.equals("rosales"))  {
 
-            /**
-             * ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
-             */
-        
+/**
+ * ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
+ */
+
             Log.d("INIT", "Starting initialization of table " + MY_ID);
             fail.setVisibility(View.INVISIBLE);
             MY_ID = Integer.parseInt(table_num); //numbered starting from 1

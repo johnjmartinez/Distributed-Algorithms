@@ -22,8 +22,45 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void increment(View view) {
-        quantity = quantity + 1;
-        display(quantity);
+
+        String item = "default";
+        // Store the table name that is clicked as a string
+        switch (view.getId()) {
+            case R.id.imagen1:
+                item = "NEW THE BLAZIN' TEXAN";
+                break;
+            case R.id.imagen2:
+                item = "NEW ALL-DAY BRUNCH BURGER";
+                break;
+            case R.id.imagen3:
+                item = "7OZ GRILLED ONION SIRLOIN WITH STOUT GRAVY";
+                break;
+            case R.id.imagen4:
+                item = "HOT SHOT WHISKEY CHICKEN";
+                break;
+            case R.id.imagen5:
+                item = "SHRIMP WONTON STIR-FRY";
+                break;
+            case R.id.imagen6:
+                item = "TRIPLE CHOCOLATE MELTDOWN";
+                break;
+            case R.id.imagen7:
+                item = "CHICKEN CEASAR SALAD";
+                break;
+            case R.id.imagen8:
+                item = "ORIENTAL CHICKEN SALAD";
+                break;
+            case R.id.imagen9:
+                item = "FRESH FRUIT CITRONADE";
+                break;
+            case R.id.imagen10:
+                item = "HOT FUDGE SUNDAE DESSERT SHOOTER";
+                break;
+        }
+            MainActivity.addToTicektOrder(item);
+            quantity = quantity + 1;
+            display(quantity);
+
 
     }
 

@@ -28,9 +28,11 @@
         </activity>
 
         <activity
-            android:label="CONFIRM_ORDER"
-            android:name=".Main22Activity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="MENU"
+            android:name=".Main22Activity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Main22Activity" />
         </activity>
 
     </application>
