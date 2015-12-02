@@ -94,13 +94,17 @@ public class Main2Activity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            Log.d("REFRESHER", "Starting new thread");
 
             while (!Thread.currentThread().isInterrupted()  ) {
                 try {
                     if (MainActivity.getRefreshStatus()) { break; }
                     if ( isCancelled() ) { return null; }
                     Thread.sleep(2000);
-                    Log.d("REFRESHER", "...waiting...");
+                    Log.v("REFRESHER", "...waiting...");
+                }
+                catch (InterruptedException ie) {
+                    //Thread got cancelled.
                 }
                 catch (Exception e) {
                     e.printStackTrace();

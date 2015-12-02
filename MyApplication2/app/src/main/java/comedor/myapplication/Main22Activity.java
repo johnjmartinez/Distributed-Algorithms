@@ -28,13 +28,18 @@ public class Main22Activity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            Log.d("REFRESHER2", "Starting new thread");
 
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     if (MainActivity.getRefreshStatus()) { break; }
                     if ( isCancelled() ) { return null; }
+                    //if ( Main22Activity.this.)
                     Thread.sleep(2000);
-                    Log.d("REFRESHER2", "...waiting...");
+                    Log.v("REFRESHER2", "...waiting...");
+                }
+                catch (InterruptedException ie) {
+                    //Thread got cancelled.
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -72,6 +77,12 @@ public class Main22Activity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         r.cancel(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateActivity();
     }
 
     public void updateActivity() {
@@ -363,6 +374,7 @@ public class Main22Activity extends AppCompatActivity {
         });
 
         //switch to MENU
+        r.cancel(true);
         Intent myIntent = new Intent(this, Main2Activity.class);
         startActivity(myIntent);
     }

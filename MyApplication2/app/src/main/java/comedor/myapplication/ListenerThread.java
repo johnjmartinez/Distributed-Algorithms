@@ -165,8 +165,6 @@ class IncomingMSGThread implements Runnable  {
 
     public void displayToast(final String msg, final Application app) {
 
-        MainActivity.setRefresh();
-
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post( new Runnable() {
 
@@ -199,6 +197,7 @@ class IncomingMSGThread implements Runnable  {
                 MainActivity.LIVE_ORDER = false;
                 MainActivity.foodQuantity = new HashMap<>(); //body == null
                 displayToast("Payment received. Thanks!", app);
+                MainActivity.setRefresh();
                 break;
             case UPDATE:
                 //always expecting ONE item ONLY
@@ -216,6 +215,7 @@ class IncomingMSGThread implements Runnable  {
                     MainActivity.addToTicektOrder(item);
                     displayToast("Server added "+ item, app);
                 }
+                MainActivity.setRefresh();
                 break;
             default:
                 //throw ERROR or something
