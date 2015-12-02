@@ -1,9 +1,10 @@
 package comedor.myapplication;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
 
@@ -15,8 +16,8 @@ import java.util.Arrays;
  */
 class ServerReq {
 
-    private static final Integer SERVER_PORT = 6000; //TEST -- TBD
-    private static final String SERVER_IP = ""; //TEST -- TBD
+    private static final Integer SERVER_PORT = 6000;
+    private static final String SERVER_IP = "192.168.247.3";
 
     //CLIENT SENDS ID + CLK + MSG TO SERVER, EXPECTS ACK or OK
     //OUTPUT TO SERVER FOLLOWS THE FOLLOWING STRING FORMAT EXCEPT DURING INIT
@@ -26,9 +27,10 @@ class ServerReq {
         Socket clientSckt;
         String answer = "ERROR";
         String OUT = ID.toString() + "!!" + Arrays.toString(CLK) + "!!" + tagNmsg;
+        Log.d("SERVER_REQ", "OUT: " + OUT);
 
         try {
-            clientSckt = new Socket(InetAddress.getByName(SERVER_IP), SERVER_PORT);
+            clientSckt = new Socket(SERVER_IP, SERVER_PORT);
             PrintWriter outToServer = new PrintWriter(clientSckt.getOutputStream(), true);
             BufferedReader inFromServer =
                     new BufferedReader(new InputStreamReader(clientSckt.getInputStream()));
@@ -46,9 +48,10 @@ class ServerReq {
         }
         catch (Exception e) {
             e.printStackTrace();
-            //continue;
+            Log.e("SERVER_REQ", "Exception " + e.toString() + " :: " + OUT);
         }
 
+        Log.d("SERVER_REQ", "Response: " + answer);
         return answer; //raw answer returned
         //return "SID!![1, 0 , 2, 1, 2]!!ACK!![IP MAP]"; ///INIT TEST
     }

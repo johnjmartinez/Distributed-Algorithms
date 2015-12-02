@@ -3,6 +3,7 @@
     package="comedor.myapplication" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
         android:allowBackup="false"
@@ -12,7 +13,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:label="LOGIN"
+            android:label="TableClient"
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,7 +23,7 @@
         </activity>
 
         <activity
-            android:label="MENU"
+            android:label="theRealMenu"
             android:name=".Main2Activity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

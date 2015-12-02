@@ -1,14 +1,17 @@
 package comedor.myapplication;
 
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.net.Inet4Address;
 import java.util.HashMap;
 
 
@@ -22,6 +25,8 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     public static final HashMap<String, Double> PRICES; //MAIN HASH FOR PRICES
     public static HashMap<String, Integer> foodQuantity = new HashMap<String, Integer>(); //TICKET
     public static Boolean LIVE_ORDER = false;
+    public static String MY_IP = null;
+
 
     static {
         PRICES = new HashMap<String, Double>();
@@ -78,24 +83,28 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
     }
 
     public void display (View view) {
+
         EditText name =     (EditText) findViewById(R.id.editText2);
         EditText password = (EditText) findViewById(R.id.editText4);
         TextView fail =     (TextView) findViewById(R.id.editText6);
+        fail.setVisibility(View.INVISIBLE);
 
         String table_num = name.getText().toString();
         String pwd = password.getText().toString();
 
-        if (pwd.equals("rosales") && (table_num.equals("999")))  {
+        if (pwd.equals("R0sales"))  {
 
         /**
         *  ON SUCCESSFUL LOGIN, START BACKGROUND LISTENER THREAD AFTER INIT WITH SERVER
         */
-
-            Log.d("INIT", "Starting initialization of table " + MY_ID);
-            fail.setVisibility(View.INVISIBLE);
+            Log.d("INIT", "Starting initialization of table " + table_num);
             MY_ID = Integer.parseInt(table_num); //numbered starting from 1 -- real id == table id
 
             Log.d("INIT", " Sending server request msg");
@@ -109,10 +118,9 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
             //Check if MSG contains ERROR (retry?) or ANS does not have enough fields
             if(answer.equals("") || answer.contains("ERROR") || answer == null) {
-                Log.e("INIT", "Bad response from server");
-                fail.setText("Bad response from server");
+                Log.e("INIT", "Bad response from server (1)" + answer);
+                fail.setText("Bad response from server (1)");
                 fail.setVisibility(View.VISIBLE);
-                Log.e("INIT", "Bad response from server");
                 return;
             }
 
@@ -125,8 +133,8 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             try {
                 if ( fields.length != 4 || fields[1].equals("") || fields[3].equals("") ||
                         !(fields[2].equals("OK") || fields[2].equals("ACK")) ) {
-                    Log.e("INIT", "Bad response from server "+ answer);
-                    fail.setText("Bad response from server " + answer);
+                    Log.e("INIT", "Bad response from server (2)"+ answer);
+                    fail.setText("Bad response from server (2)" + answer);
                     fail.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -162,10 +170,14 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
             //Check ID matches IP MAP location
             try {
-                String MY_IP = Inet4Address.getLocalHost().getHostAddress();
-                if (IP_MAP[MY_ID-1] != MY_IP) {
+                WifiManager wifiMgr = (WifiManager) getSystemService(WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
+                int ip = wifiInfo.getIpAddress();
+                MY_IP = Formatter.formatIpAddress(ip);
+                if (!IP_MAP[MY_ID-1].equals(MY_IP)) {
                     fail.setText("Mismatch of CLIENT IP in IP MAP");
-                    Log.e("INIT", "Mismatch: IP MAP OF MY_ID: " + IP_MAP[MY_ID-1] + ". MY_IP:" + MY_IP);
+                    Log.e("INIT", "Mismatch: IP MAP OF MY_ID:" + IP_MAP[MY_ID-1] + ": -  MY_IP:" +
+                            MY_IP + ":");
                     fail.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -178,7 +190,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             CLK = new Integer[clk_vector.length];
             for (int i = 0; i < clk_vector.length; i++) {
                 try {
-                    CLK[i] = Integer.parseInt(clk_vector[i]);
+                    CLK[i] = Integer.parseInt(clk_vector[i].replaceAll("\\s+",""));
                 }
                 catch (NumberFormatException nfe) {
                     nfe.printStackTrace();
@@ -195,6 +207,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
             Log.d("INIT", "Starting client listening thread");
             new Thread(new ListenerThread(CLIENT_PORT, getApplication())).start();
             foodQuantity = new HashMap<>();
+            tickCLK();
 
             Log.d("INIT", "Switching view to menu");
             Intent intent = new Intent(this, Main2Activity.class);

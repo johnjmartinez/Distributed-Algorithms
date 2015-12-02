@@ -327,6 +327,8 @@ public class Main22Activity extends AppCompatActivity {
 
         for (int i = 0; i < clk.length; i++) {
             if (i+1 == MainActivity.MY_ID) { continue; }
+            else if (MainActivity.IP_MAP[i].equals(MainActivity.MY_IP)) { continue; } //TO BE REMOVED
+            else if (MainActivity.IP_MAP[i].equals("0"))  { continue; }
             new Thread(new PeerMsg( MainActivity.IP_MAP[i], clk )).start();
         }
         Log.d("PEER_BRDCAST", "Done");
