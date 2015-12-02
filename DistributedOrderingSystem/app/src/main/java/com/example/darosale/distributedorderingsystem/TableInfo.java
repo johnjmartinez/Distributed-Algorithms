@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -40,6 +43,23 @@ public class TableInfo extends AppCompatActivity {
         setTitle(MyActivity.user + ": " + table.toUpperCase());
         // Update the display info based on the table name passed in
         updateActivity();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.refresh) {
+            updateActivity();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void updateActivity() {
@@ -155,7 +175,7 @@ public class TableInfo extends AppCompatActivity {
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry)it.next();
             items += pair.getKey() + "#";
-            }
+        }
         return items.split("#");
     }
 
@@ -306,7 +326,7 @@ public class TableInfo extends AppCompatActivity {
                         }
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "!!UPDATE!!" + strName + "=-1";
-                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1];
+                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1]) - 1];
                         // Send the update to the table
                         ListenerThread.TCPCall(ip, cmd);
                         // Update the display info with the new table order

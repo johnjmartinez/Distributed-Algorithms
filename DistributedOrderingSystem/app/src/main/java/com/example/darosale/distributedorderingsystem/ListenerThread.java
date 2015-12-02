@@ -1,6 +1,8 @@
 package com.example.darosale.distributedorderingsystem;
 
+import android.app.Activity;
 import android.app.Application;
+import android.app.Notification;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -35,9 +37,9 @@ public class ListenerThread extends Thread {
         Log.d("ListenerThread run()", "Check 1 Thread started");
         String msg = "";
         String[] data;
-        //Log.d("ListenerThread run()", "Check 2 Starting TestThread");
-        //TestThread t = new TestThread();
-        //t.start();
+        Log.d("ListenerThread run()", "Check 2 Starting TestThread");
+        TestThread t = new TestThread();
+        t.start();
         // Loop forever listening for incoming requests
         try {
             Log.d("ListenerThread run()", "Check 3 Entering while loop");
