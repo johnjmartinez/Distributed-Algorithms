@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -101,6 +102,10 @@ public class MyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         setTitle("JDA Restaurant");
         Log.d("Info", " Starting thread");
+        if (android.os.Build.VERSION.SDK_INT > 9) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
         // Create the TCP listener thread and start it
         ListenerThread lt = new ListenerThread(getApplication());
         lt.start();

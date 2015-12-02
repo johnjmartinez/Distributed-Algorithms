@@ -73,20 +73,27 @@ public class ListenerThread extends Thread {
                     // Sync all clients with the new ID/IP lists
                     String clientAddress = sock.getInetAddress().toString();
                     String cmd = "";
-                    // Check if this table ID is already taken
-                    if (MyActivity.tableIPs[Integer.parseInt(data[0])-1].equals("0")){
+                    // First check that the table is not out of bounds
+                    if (Integer.parseInt(data[0])<1 || Integer.parseInt(data[0])>10){
                         // Send an error message to the client
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "INFO!!ERROR: Table ID already in use";
+                                "!!INFO!!ERROR: Table ID must be between 1 and 10 inclusive";
                         out.println(cmd);
-                        sendToast("Table" + data[0] + " has come online");
+                    }
+                    // Check if this table ID is already taken
+                    else if (!MyActivity.tableIPs[Integer.parseInt(data[0])-1].equals("0")){
+                        // Send an error message to the client
+                        cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
+                                "!!INFO!!ERROR: Table ID already in use";
+                        out.println(cmd);
                     }
                     else {
                         // Send clock and IP list to all clients
                         updateIPList(data, clientAddress);
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                                "ACK!!" + Arrays.toString(MyActivity.tableIPs);
+                                "!!ACK!!" + Arrays.toString(MyActivity.tableIPs);
                         out.println(cmd);
+                        sendToast("Table" + data[0] + " has come online");
                         out.close();
                         in.close();
                         sock.close();
@@ -284,7 +291,7 @@ public class ListenerThread extends Thread {
 
     public void updateIPList(String[] data, String clientAddress){
         // Method for updating the IP address list and broadcasting it to the current clients
-        MyActivity.tableIPs[Integer.parseInt(data[0])-1] = clientAddress;
+        MyActivity.tableIPs[Integer.parseInt(data[0])-1] = clientAddress.replace("/", "");
     }
 
     public void broadcastIPs(int id){
@@ -320,18 +327,13 @@ public class ListenerThread extends Thread {
             // Send the message
             out.println(cmd);
             Log.d("TCPCall", "Check 5");
-            while (!in.ready()); {
-                //Wait until a message is being sent back, used as an acknowledgement
-            }
-            Log.d("TCPCall", "Check 6");
-            Log.d("TCPCall", in.readLine());
             // Close the connection
             out.close();
-            Log.d("TCPCall", "Check 7");
+            Log.d("TCPCall", "Check 6");
             in.close();
-            Log.d("TCPCall", "Check 8");
+            Log.d("TCPCall", "Check 7");
             sock.close();
-            Log.d("TCPCall", "Check 9");
+            Log.d("TCPCall", "Check 8");
         } catch (UnknownHostException exc) {
             Log.d("Error", exc.toString());
         } catch (SocketException exc) {

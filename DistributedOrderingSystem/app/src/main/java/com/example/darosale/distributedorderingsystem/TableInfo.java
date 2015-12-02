@@ -223,11 +223,14 @@ public class TableInfo extends AppCompatActivity {
                         Log.d("Check", "Add to order 9");
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "!!UPDATE!!" + strName + "=1";
-                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1];
+                        Log.d("Check", "Add to order 10");
                         // Send the update to the table
                         ListenerThread.TCPCall(ip, cmd);
+                        Log.d("Check", "Add to order 11");
                         // Update the display info with the new table order
                         updateActivity();
+                        Log.d("Check", "Add to order 12");
                     }
                 });
                 // If the add is not confirmed, just exit
@@ -303,7 +306,7 @@ public class TableInfo extends AppCompatActivity {
                         }
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "!!UPDATE!!" + strName + "=-1";
-                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+                        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1];
                         // Send the update to the table
                         ListenerThread.TCPCall(ip, cmd);
                         // Update the display info with the new table order
@@ -378,7 +381,8 @@ public class TableInfo extends AppCompatActivity {
         // Clear the display of the table order
         updateActivity();
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) + "!!CLEAR!!null";
-        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[0])];
+        Log.d("Check", table.split("table")[0]);
+        String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1];
         // Send the clear call to table
         ListenerThread.TCPCall(ip, cmd);
     }
