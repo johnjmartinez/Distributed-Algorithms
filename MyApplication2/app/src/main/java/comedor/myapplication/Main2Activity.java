@@ -94,7 +94,7 @@ public class Main2Activity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.d("REFRESHER", "Starting new thread");
+            Log.v("REFRESHER", "Starting new thread");
 
             while (!Thread.currentThread().isInterrupted()  ) {
                 try {
@@ -110,7 +110,7 @@ public class Main2Activity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            Log.d("REFRESHER", "triggered");
+            Log.v("REFRESHER", "triggered");
             return null;
         }
 

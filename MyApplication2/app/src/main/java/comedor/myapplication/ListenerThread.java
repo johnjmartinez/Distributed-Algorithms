@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -101,12 +102,13 @@ class IncomingMSGThread implements Runnable  {
             //INCOMING = ID + CLK
             else {
                 if (fields.length == 2) {
-                    Integer ID = Integer.parseInt(fields[1]);
+                    Integer ID = Integer.parseInt(fields[0].replaceAll("\\s+",""));
 
                     //Check ID is valid --- getting real ID, NOT id-1
                     if (ID > MainActivity.getCLK().length ||
-                            MainActivity.IP_MAP[ID - 1] != clientSckt.getInetAddress().getHostAddress()) {
-                        throw new IllegalStateException("Invalid IP in Listener Thread");
+                        !(MainActivity.IP_MAP[ID - 1].equals(clientSckt.getInetAddress().getHostAddress()))) {
+                        throw new IllegalStateException("Invalid IP in Listener Thread " +
+                                Arrays.toString(MainActivity.getCLK()) );
                     }
                     else {
                         updateCLK(ID, fields[1]);
@@ -177,7 +179,7 @@ class IncomingMSGThread implements Runnable  {
 
     }
 
-    public void processMSG( String tag, String msg ) {
+    public void processMSG( String tag, String msg ) { //SERVE MSGS ONLY
 
         String[] fields = null;
 

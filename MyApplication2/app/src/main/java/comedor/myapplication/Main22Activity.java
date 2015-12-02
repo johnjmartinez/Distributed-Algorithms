@@ -34,7 +34,6 @@ public class Main22Activity extends AppCompatActivity {
                 try {
                     if (MainActivity.getRefreshStatus()) { break; }
                     if ( isCancelled() ) { return null; }
-                    //if ( Main22Activity.this.)
                     Thread.sleep(2000);
                     Log.v("REFRESHER2", "...waiting...");
                 }
@@ -350,19 +349,36 @@ public class Main22Activity extends AppCompatActivity {
     public void sendTicket(View view) {
 
         String ticket = serializeTicket(MainActivity.foodQuantity);
-        Log.d("CONFIRM", "Sending ticket to server\n" + ticket);
+        Log.v("CONFIRM", "Sending ticket to server\n" + ticket);
 
         MainActivity.tickCLK();
 
         String tag = "ORDER!!";
+        if (MainActivity.LIVE_ORDER) { tag = "UPDATE!!"; }
+
         Integer[] clk = MainActivity.getCLK();
 
         broadcastPeers(clk);
-        ServerReq.out(MainActivity.MY_ID, clk, tag + ticket);
+        String answer = ServerReq.out(MainActivity.MY_ID, clk, tag + ticket);
+
+        if (!answer.toLowerCase().contains("order")) {
+
+            Log.v("CONFIRM", "ERROR");
+
+            //toaster for failure
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Fail to send ticket! Try again.",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+            return;
+        }
 
         MainActivity.LIVE_ORDER = true;
 
-        Log.d("CONFIRM", "DONE");
+        Log.v("CONFIRM", "DONE");
 
         //toaster for success
         runOnUiThread(new Runnable() {
@@ -391,7 +407,7 @@ public class Main22Activity extends AppCompatActivity {
 
     public void broadcastPeers(Integer[] clk) {
 
-        Log.d("PEER_BRDCAST", "Starting broadcast of clk "+ clk);
+        Log.d("PEER_BRDCAST", "Starting broadcast of clk "+ Arrays.toString(clk));
 
         for (int i = 0; i < clk.length; i++) {
             if (i+1 == MainActivity.MY_ID) { continue; }

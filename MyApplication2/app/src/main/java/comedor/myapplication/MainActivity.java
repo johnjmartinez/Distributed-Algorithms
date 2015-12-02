@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     public static String MY_IP = null;
     private static Boolean REFRESH_VIEW = false;
 
-
     static {
         PRICES = new HashMap<String, Double>();
         PRICES.put("NEW THE BLAZIN' TEXAN", 15.99);
