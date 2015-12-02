@@ -1,9 +1,11 @@
 package comedor.myapplication;
 
+import android.app.Activity;
 import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -82,48 +84,47 @@ class IncomingMSGThread implements Runnable {
     }
 
     public void run() {
+        try {
+            String INCOMING = in.readLine();
+            String[] fields = INCOMING.split("!!"); //main delimeter = !!
 
-        while (!Thread.currentThread().isInterrupted()) {
-            try {
-                String INCOMING = in.readLine();
-                String[] fields = INCOMING.split("!!"); //main delimeter = !!
-
-                //SERVER_ID=6000 (same as server port??) --- OPS={<see below>}
-                //INCOMING = SID + CLK + TAG + MSG
-                String SID = "6000"; //SET SERVER ID ACCORDINGLY (SID==PORT)
-                if (fields[0].equals(SID)) {
-                    if (fields.length == 4 ) {
-                        updateCLK(Integer.parseInt(SID), fields[1]);
-                        processMSG(fields[2],fields[3]);
-                        //NOPE! -- Send ACK back to server?
-                    }
+            //SERVER_ID=6000 (same as server port??) --- OPS={<see below>}
+            //INCOMING = SID + CLK + TAG + MSG
+            String SID = "6000"; //SET SERVER ID ACCORDINGLY (SID==PORT)
+            if (fields[0].equals(SID)) {
+                if (fields.length == 4) {
+                    updateCLK(Integer.parseInt(SID), fields[1]);
+                    processMSG(fields[2], fields[3]);
+                    //NOPE! -- Send ACK back to server?
                 }
+            }
 
-                //CLIENT_IDS={0:size_of_CLK} -- OP=UPDATECLKS
-                //INCOMING = ID + CLK
-                else {
-                    if (fields.length == 2) {
-                        Integer ID = Integer.parseInt(fields[1]);
+            //CLIENT_IDS={0:size_of_CLK} -- OP=UPDATECLKS
+            //INCOMING = ID + CLK
+            else {
+                if (fields.length == 2) {
+                    Integer ID = Integer.parseInt(fields[1]);
 
-                        //Check ID is valid --- getting real ID, NOT id-1
-                        if (ID > MainActivity.getCLK().length ||
-                                MainActivity.IP_MAP[ID - 1] != clientSckt.getInetAddress().getHostAddress()) {
-                            throw new IllegalStateException("Invalid IP in Listener Thread");
-                        }
-                        else {
-                            updateCLK(ID, fields[1]);
-                        }
+                    //Check ID is valid --- getting real ID, NOT id-1
+                    if (ID > MainActivity.getCLK().length ||
+                            MainActivity.IP_MAP[ID - 1] != clientSckt.getInetAddress().getHostAddress()) {
+                        throw new IllegalStateException("Invalid IP in Listener Thread");
                     }
                     else {
-                        throw new IllegalStateException("Invalid MSG received " + INCOMING);
+                        updateCLK(ID, fields[1]);
                     }
                 }
+                else {
+                    throw new IllegalStateException("Invalid MSG received " + INCOMING);
+                }
             }
-            catch (Exception e) {
-                e.printStackTrace();
-                Log.e("LISTENER", "Exception caught " + e.toString());
-            }
-        }//end while
+
+            clientSckt.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.e("LISTENER", "Exception caught " + e.toString());
+        }
     }//end run
 
     synchronized public void updateCLK(Integer ID, String strCLK) {
@@ -140,7 +141,7 @@ class IncomingMSGThread implements Runnable {
 
         for (int i = 0; i < vector.length; i++) {
             try {
-                newComponent = Integer.parseInt(vector[i]);
+                newComponent = Integer.parseInt(vector[i].replaceAll("\\s+",""));
 
                 //COMPARE AND SET rcvdCLK vs. localCLK newComponents
                 clk[i] = (clk[i] > newComponent ? clk[i] : newComponent);
@@ -175,9 +176,12 @@ class IncomingMSGThread implements Runnable {
                         Toast.LENGTH_LONG).show();
             }
         });
+
+        //get rootView and invalidate --stackoverflow 131149669
+        View v = ((Activity) app.getApplicationContext()).getWindow().getDecorView().findViewById(android.R.id.content);
+        v.postInvalidate();
+
     }
-
-
 
     public void processMSG( String tag, String msg ) {
 
@@ -193,7 +197,7 @@ class IncomingMSGThread implements Runnable {
             case INFO:     //SID!!CLK!!INFO!!IP_ARRAY
                 //No need to use fields since msg = IP_ARRAY
                 MainActivity.IP_MAP = msg.replaceAll("\\[|\\]|\\s+", "").split(",");
-                displayToast("New Peer", app);
+                displayToast("New Table Registered.", app);
                 break;
             case CLEAR:
                 MainActivity.LIVE_ORDER = false;
@@ -202,6 +206,9 @@ class IncomingMSGThread implements Runnable {
                 break;
             case UPDATE:
                 //always expecting ONE item ONLY
+                if (!MainActivity.LIVE_ORDER) {
+                    MainActivity.LIVE_ORDER = true;
+                }
                 String item = msg.split("=")[0];
                 if ( msg.contains("=-1") ) {
                     //delete 1 from item qty.

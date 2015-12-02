@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,6 @@ public class Main22Activity extends AppCompatActivity {
 
     }
 
-
     public void updateActivity() {
         // Method for updating each individual views in this activity
         TextView order = (TextView) findViewById(R.id.order1);
@@ -42,6 +42,17 @@ public class Main22Activity extends AppCompatActivity {
         String formatQty;
         double price = 0;
 
+        //Set buttons if order is live
+        Button minus = (Button) findViewById(R.id.button_delete);
+        Button out = (Button) findViewById(R.id.button4);
+        if (MainActivity.LIVE_ORDER) {
+            minus.setVisibility(View.INVISIBLE);
+            out.setText("CONFIRM UPDATE");
+        }
+        else {
+            minus.setVisibility(View.VISIBLE);
+            out.setText("CONFIRM");
+        }
 
 
         // Check if the table order does not exist or has no items

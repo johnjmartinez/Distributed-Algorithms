@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class Main2Activity extends AppCompatActivity {
@@ -15,14 +16,31 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        Button out = (Button) findViewById(R.id.button3);
+        quantity = MainActivity.getQuantity();
+        display(quantity);
+        if (MainActivity.LIVE_ORDER) {
+            out.setText("UPDATE ORDER");
+        }
+        else {
+            out.setText("CHECK OUT");
+        }
     }
+
     @Override
     public void onResume()
     {  // After a pause OR at startup
         super.onResume();
+
+        Button out = (Button) findViewById(R.id.button3);
         quantity = MainActivity.getQuantity();
         display(quantity);
-
+        if (MainActivity.LIVE_ORDER) {
+            out.setText("UPDATE ORDER");
+        }
+        else {
+            out.setText("CHECK OUT");
+        }
     }
 
     public void increment(View view) {
@@ -64,12 +82,10 @@ public class Main2Activity extends AppCompatActivity {
             MainActivity.addToTicektOrder(item);
             quantity = MainActivity.getQuantity();
             display(quantity);
-
-
     }
 
-// method for displaying quantity
-    private void display(int number) {
+   //method for displaying quantity
+    public void display(int number) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantity);
         quantityTextView.setText("" + number);
     }
