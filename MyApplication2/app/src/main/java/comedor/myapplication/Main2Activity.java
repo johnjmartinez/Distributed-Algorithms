@@ -1,46 +1,32 @@
 package comedor.myapplication;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 public class Main2Activity extends AppCompatActivity {
 
-    int quantity;
+    TextView quantityTextView;
+    Refresher r = new Refresher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //MENU SCREEN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        Button out = (Button) findViewById(R.id.button3);
-        quantity = MainActivity.getQuantity();
-        display(quantity);
-        if (MainActivity.LIVE_ORDER) {
-            out.setText("UPDATE ORDER");
-        }
-        else {
-            out.setText("CHECK OUT");
-        }
+        quantityTextView = (TextView) findViewById(R.id.quantity);
+        display();
     }
 
     @Override
-    public void onResume()
-    {  // After a pause OR at startup
+    public void onResume() {
         super.onResume();
-
-        Button out = (Button) findViewById(R.id.button3);
-        quantity = MainActivity.getQuantity();
-        display(quantity);
-        if (MainActivity.LIVE_ORDER) {
-            out.setText("UPDATE ORDER");
-        }
-        else {
-            out.setText("CHECK OUT");
-        }
+        display();
     }
 
     public void increment(View view) {
@@ -80,19 +66,59 @@ public class Main2Activity extends AppCompatActivity {
                 break;
         }
             MainActivity.addToTicektOrder(item);
-            quantity = MainActivity.getQuantity();
-            display(quantity);
+            display();
     }
 
    //method for displaying quantity
-    public void display(int number) {
-        TextView quantityTextView = (TextView) findViewById(R.id.quantity);
-        quantityTextView.setText("" + number);
+    public void display() {
+        quantityTextView.setText("" + MainActivity.getQuantity());
+
+        Button out = (Button) findViewById(R.id.button3);
+        if (MainActivity.LIVE_ORDER) { out.setText("UPDATE ORDER"); }
+        else { out.setText("CHECK OUT"); }
+
+        r.cancel(true);
+        r = new Refresher();
+        r.execute();
     }
 
 
     public void checkOut(View view) { //ALWAYS REQUIRE VIEW
+        r.cancel(true);
         Intent myIntent = new Intent(this, Main22Activity.class);
         startActivity(myIntent);
+    }
+
+
+    private class Refresher extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            while (!Thread.currentThread().isInterrupted()  ) {
+                try {
+                    if (MainActivity.getRefreshStatus()) { break; }
+                    if ( isCancelled() ) { return null; }
+                    Thread.sleep(2000);
+                    Log.d("REFRESHER", "...waiting...");
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.d("REFRESHER", "triggered");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (MainActivity.getRefreshStatus()) {
+                MainActivity.unsetRefresh();
+                //DOESN'T DO SHITE --- quantityTextView.invalidate();
+                Main2Activity.this.display();
+                Log.d("REFRESHER", "done");
+            }
+            super.onPostExecute(result);
+        }
     }
 }

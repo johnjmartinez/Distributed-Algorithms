@@ -1,11 +1,9 @@
 package comedor.myapplication;
 
-import android.app.Activity;
 import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -57,7 +55,7 @@ class ListenerThread implements Runnable {
     } // end run
 }
 
-class IncomingMSGThread implements Runnable {
+class IncomingMSGThread implements Runnable  {
 
     //define all possible incoming messages from server
     //NOT USED -- private static final String CONFIRM = "confirm";
@@ -127,7 +125,7 @@ class IncomingMSGThread implements Runnable {
         }
     }//end run
 
-    synchronized public void updateCLK(Integer ID, String strCLK) {
+    synchronized public void updateCLK (Integer ID, String strCLK) {
 
         Log.d("LISTENER", "CLK update from " + ID);
 
@@ -167,8 +165,10 @@ class IncomingMSGThread implements Runnable {
 
     public void displayToast(final String msg, final Application app) {
 
+        MainActivity.setRefresh();
+
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        handler.post( new Runnable() {
 
             @Override
             public void run() {
@@ -176,10 +176,6 @@ class IncomingMSGThread implements Runnable {
                         Toast.LENGTH_LONG).show();
             }
         });
-
-        //get rootView and invalidate --stackoverflow 131149669
-        View v = ((Activity) app.getApplicationContext()).getWindow().getDecorView().findViewById(android.R.id.content);
-        v.postInvalidate();
 
     }
 
@@ -226,5 +222,6 @@ class IncomingMSGThread implements Runnable {
                 break;
         }
     }
+
 }//end class
 

@@ -17,7 +17,6 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
 
-
     public static final Integer CLIENT_PORT = 1234; //HARDCODED
     public static Integer MY_ID = null;   //SET ON LOGIN
     private static Integer[] CLK = null;  //RCV FROM SERVER DURING INIT
@@ -26,6 +25,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     public static HashMap<String, Integer> foodQuantity = new HashMap<String, Integer>(); //TICKET
     public static Boolean LIVE_ORDER = false;
     public static String MY_IP = null;
+    private static Boolean REFRESH_VIEW = false;
 
 
     static {
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         // Else we need to instantiate the mapping and the add the item
         if (foodQuantity.containsKey(item)) {
             int x = foodQuantity.get(item);
-            foodQuantity.put(item, x+1);
+            foodQuantity.put(item, x + 1);
         } else {
             foodQuantity.put(item, 1);
         }
@@ -77,6 +77,19 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         }
         return num;
     }
+
+    synchronized public static void setRefresh() {
+        REFRESH_VIEW = true;
+    }
+
+    synchronized public static void unsetRefresh() {
+        REFRESH_VIEW = false;
+    }
+
+    synchronized public static Boolean getRefreshStatus() {
+        return REFRESH_VIEW;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,3 +244,5 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
         CLK[MY_ID-1]++;
     }
 }//end MainActivity
+
+

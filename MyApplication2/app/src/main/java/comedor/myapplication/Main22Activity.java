@@ -3,9 +3,8 @@ package comedor.myapplication;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,15 +22,64 @@ import java.util.Map;
 
 public class Main22Activity extends AppCompatActivity {
 
+    Refresher r = new Refresher();
+
+    private class Refresher extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    if (MainActivity.getRefreshStatus()) { break; }
+                    if ( isCancelled() ) { return null; }
+                    Thread.sleep(2000);
+                    Log.d("REFRESHER2", "...waiting...");
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            Log.d("REFRESHER2", "triggered");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (MainActivity.getRefreshStatus()) {
+                MainActivity.unsetRefresh();
+                Main22Activity.this.updateActivity();
+                Log.d("REFRESHER2", "done");
+            }
+            super.onPostExecute(result);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) { //CONFIRM SCREEN
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main22);
         updateActivity();
+    }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        r.cancel(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        r.cancel(true);
     }
 
     public void updateActivity() {
+
+        r.cancel(true);
+        r = new Refresher();
+        r.execute();
+
         // Method for updating each individual views in this activity
         TextView order = (TextView) findViewById(R.id.order1);
         TextView qty = (TextView) findViewById(R.id.qty1);
@@ -42,7 +90,7 @@ public class Main22Activity extends AppCompatActivity {
         String formatQty;
         double price = 0;
 
-        //Set buttons if order is live
+        //Change buttons if order is live or not
         Button minus = (Button) findViewById(R.id.button_delete);
         Button out = (Button) findViewById(R.id.button4);
         if (MainActivity.LIVE_ORDER) {
@@ -53,7 +101,6 @@ public class Main22Activity extends AppCompatActivity {
             minus.setVisibility(View.VISIBLE);
             out.setText("CONFIRM");
         }
-
 
         // Check if the table order does not exist or has no items
         if (MainActivity.foodQuantity.isEmpty()) {
@@ -307,8 +354,7 @@ public class Main22Activity extends AppCompatActivity {
         Log.d("CONFIRM", "DONE");
 
         //toaster for success
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
+        runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(getApplicationContext(), "Order submitted successfully!",
@@ -319,7 +365,6 @@ public class Main22Activity extends AppCompatActivity {
         //switch to MENU
         Intent myIntent = new Intent(this, Main2Activity.class);
         startActivity(myIntent);
-
     }
 
     public String serializeTicket (HashMap<String, Integer> t) {
