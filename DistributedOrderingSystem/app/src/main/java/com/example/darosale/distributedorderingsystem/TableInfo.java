@@ -4,13 +4,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.GpsStatus;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +28,10 @@ public class TableInfo extends AppCompatActivity {
 
     public static String user = "default";
     public static String table = "table0";
+    public static String status = "offline";
+    public static Menu menu1;
+
+    Refresher r = new Refresher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,21 +51,57 @@ public class TableInfo extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.options_menu, menu);
+        inflater.inflate(R.menu.table_menu, menu);
+        this.menu1 = menu;
+        MenuItem itm = (MenuItem) menu.findItem(R.id.status);
+        // If the client is online, set his light to green
+        if (MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1]!="0") {
+            itm.setIcon(R.drawable.online);
+            this.status = "online";
+        }
 
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.refresh) {
-            updateActivity();
+        if(item.getItemId() == R.id.messages) {
+            showMessages();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        r.cancel(true);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        r.cancel(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateActivity();
+    }
+
     public void updateActivity() {
+        r.cancel(true);
+        r = new Refresher();
+        r.execute();
+
         // Method for updating each individual views in this activity
         TextView order = (TextView) findViewById(R.id.order1);
         TextView qty = (TextView) findViewById(R.id.qty1);
@@ -118,6 +157,13 @@ public class TableInfo extends AppCompatActivity {
         // Add up the numbers to get the total cost of the table order
         double tot = Math.round((price - c + t) * 100.00) / 100.00;
         cost.setText("$" + tot);
+        // Set the status light
+        if (status.equals("online")){
+            onPrepareOptionsMenu(menu1);
+        }
+        else if (status.equals("offline")){
+            onPrepareOptionsMenu(menu1);
+        }
     }
 
     public String formatItemsAndQty(HashMap<String, Integer> mp){
@@ -181,6 +227,9 @@ public class TableInfo extends AppCompatActivity {
 
     public void addToOrder(View view){
         // Method for handling popup dialogue for adding an item to an order
+        if (status.equals("offline")){
+            return;
+        }
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
         //builderSingle.setIcon(R.drawable.ic_launcher);
         builderSingle.setTitle("Select Item to Add");
@@ -217,40 +266,28 @@ public class TableInfo extends AppCompatActivity {
                         dialog.dismiss();
                         // Check if the order was previously placed
                         if (MyActivity.tableOrders.containsKey(table)){
-                            Log.d("Check", "Add to order 1");
                             // Check if the order already has this item in it
                             if (MyActivity.tableOrders.get(table).containsKey(strName)){
-                                Log.d("Check", "Add to order 2");
                                 // If the item was already there, we need to update the quantity
                                 int val = MyActivity.tableOrders.get(table).get(strName);
-                                Log.d("Check", "Add to order 3");
                                 MyActivity.updateTableOrder(table, strName, val + 1);
-                                Log.d("Check", "Add to order 4");
                             }
                             else {
-                                Log.d("Check", "Add to order 5");
                                 // If the item wasn't there, we just add a single item to the order
                                 MyActivity.updateTableOrder(table, strName, 1);
-                                Log.d("Check", "Add to order 6");
                             }
                         }
                         else {
-                            Log.d("Check", "Add to order 7");
                             // If the order didn't exist, we need to create it
                             MyActivity.updateTableOrder(table, strName, 1);
-                            Log.d("Check", "Add to order 8");
                         }
-                        Log.d("Check", "Add to order 9");
                         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "!!UPDATE!!" + strName + "=1";
                         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1];
-                        Log.d("Check", "Add to order 10");
                         // Send the update to the table
                         ListenerThread.TCPCall(ip, cmd);
-                        Log.d("Check", "Add to order 11");
                         // Update the display info with the new table order
                         updateActivity();
-                        Log.d("Check", "Add to order 12");
                     }
                 });
                 // If the add is not confirmed, just exit
@@ -269,10 +306,8 @@ public class TableInfo extends AppCompatActivity {
     public void deleteFromOrder(View view){
         // Method for handling the popup dialogue for deleting an order item
         // Do not create popup if the order is empty
-        if (!MyActivity.tableOrders.containsKey(table)){
-            return;
-        }
-        if (MyActivity.tableOrders.get(table).isEmpty()){
+        if (status.equals("offline") || !MyActivity.tableOrders.containsKey(table) ||
+                MyActivity.tableOrders.get(table).isEmpty()){
             return;
         }
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
@@ -348,11 +383,8 @@ public class TableInfo extends AppCompatActivity {
 
     public void addComp(View view){
         // Method for handling the popup dialogue for adding a comp
-        // If the table order does not exist, do not create popup
-        if (!MyActivity.tableOrders.containsKey(table)){
-            return;
-        }
-        if (MyActivity.tableOrders.get(table).isEmpty()){
+        if (status.equals("offline") || !MyActivity.tableOrders.containsKey(table) ||
+                MyActivity.tableOrders.get(table).isEmpty()){
             return;
         }
         AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
@@ -392,8 +424,10 @@ public class TableInfo extends AppCompatActivity {
     }
 
     public void cashOut(View view){
-        // Mehtod for handling an order settlement
-
+        // Method for handling an order settlement
+        if (status.equals("offline")){
+            return;
+        }
         // Remove the table comp
         MyActivity.tableComps.remove(table);
         // Remove the table order
@@ -401,9 +435,84 @@ public class TableInfo extends AppCompatActivity {
         // Clear the display of the table order
         updateActivity();
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) + "!!CLEAR!!null";
-        Log.d("Check", table.split("table")[0]);
         String ip = MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1];
         // Send the clear call to table
         ListenerThread.TCPCall(ip, cmd);
+        MyActivity.messages.add("Payment Received for " + table);
+        removeFromQueue();
+    }
+
+    public void removeFromQueue(){
+        // Method for removing an item from the queue
+        for (int i=1; i<11; i++){
+            if (MyActivity.queue.get(i).split("#")[0].equals(table)){
+                for (int j=i+1; j<11; j++){
+                    MyActivity.queue.put(i, MyActivity.queue.get(j));
+                    if (j==10){
+                        MyActivity.queue.put(j, "Empty");
+                    }
+                }
+            }
+        }
+    }
+
+    public void showMessages(){
+        // Method for handling popup dialogue displaying messages
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableInfo.this);
+        //builderSingle.setIcon(R.drawable.ic_launcher);
+        builderSingle.setTitle("Messages");
+        // Use a single choice list for our dialogue
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                TableInfo.this,
+                android.R.layout.simple_list_item_1);
+        // Add each item to the adapter for the list
+        for (int i=MyActivity.messages.size()-1; i>=0; i--) {
+            arrayAdapter.add(MyActivity.messages.get(i));
+        }
+        // If the delete is canceled, just exit
+        builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // no-op
+            }
+        });
+        // If an item was selected, create a second popup to confirm
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builderSingle.show();
+    }
+
+    private class Refresher extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            while (!Thread.currentThread().isInterrupted()  ) {
+                try {
+                    if (MyActivity.getRefreshStatus()) { break; }
+                    if ( isCancelled() ) { return null; }
+                    Thread.sleep(2000);
+                }
+                catch (InterruptedException ie) {
+                    //Thread got cancelled.
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (MyActivity.getRefreshStatus()) {
+                MyActivity.unsetRefresh();
+                updateActivity();
+            }
+            super.onPostExecute(result);
+        }
     }
 }

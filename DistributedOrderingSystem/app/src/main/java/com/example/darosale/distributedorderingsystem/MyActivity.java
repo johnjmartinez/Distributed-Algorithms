@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MyActivity extends AppCompatActivity {
@@ -49,10 +50,12 @@ public class MyActivity extends AppCompatActivity {
     public static HashMap<String, HashMap<String, Integer>> tableOrders = new HashMap<String, HashMap<String, Integer>>();
     public static HashMap<String, String> accounts = new HashMap<String, String>();
     public static int[] vClock = {0,0,0,0,0,0,0,0,0,0};
-    public static String[] tableIPs = {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
+    public static ArrayList<String> messages = new ArrayList<String>();
+    public static String[] tableIPs = {"1", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
+    private static boolean refreshView = false;
 
     static {
-        accounts.put("root", "passw0rd");
+        accounts.put("root", "pass");
     }
 
     public static HashMap<Integer, String> queue = new HashMap<Integer, String>();
@@ -101,7 +104,6 @@ public class MyActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("JDA Restaurant");
-        Log.d("Info", " Starting thread");
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -184,5 +186,17 @@ public class MyActivity extends AppCompatActivity {
             }
         });
         builderSingle.show();
+    }
+
+    synchronized public static void setRefresh() {
+        refreshView = true;
+    }
+
+    synchronized public static void unsetRefresh() {
+        refreshView = false;
+    }
+
+    synchronized public static Boolean getRefreshStatus() {
+        return refreshView;
     }
 }

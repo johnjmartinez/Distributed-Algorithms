@@ -1,12 +1,18 @@
 package com.example.darosale.distributedorderingsystem;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,6 +29,23 @@ public class TableLayout extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Welcome " + MyActivity.user);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.layout_menu, menu);
+
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.messages) {
+            showMessages();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void viewTable(View view){
@@ -71,5 +94,34 @@ public class TableLayout extends AppCompatActivity {
         // Method for switching to the Queue activity
         Intent intent = new Intent(this, Queue.class);
         startActivity(intent);
+    }
+
+    public void showMessages(){
+        // Method for handling popup dialogue displaying messages
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(TableLayout.this);
+        //builderSingle.setIcon(R.drawable.ic_launcher);
+        builderSingle.setTitle("Messages");
+        // Use a single choice list for our dialogue
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                TableLayout.this,
+                android.R.layout.simple_list_item_1);
+        // Add each item to the adapter for the list
+        for (int i=MyActivity.messages.size()-1; i>=0; i--) {
+            arrayAdapter.add(MyActivity.messages.get(i));
+        }
+        // If the delete is canceled, just exit
+        builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // no-op
+            }
+        });
+        // If an item was selected, create a second popup to confirm
+        builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builderSingle.show();
     }
 }

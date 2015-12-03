@@ -37,7 +37,7 @@ public class ListenerThread extends Thread {
         Log.d("ListenerThread run()", "Check 1 Thread started");
         String msg = "";
         String[] data;
-        Log.d("ListenerThread run()", "Check 2 Starting TestThread");
+        // Log.d("ListenerThread run()", "Check 2 Starting TestThread");
         TestThread t = new TestThread();
         t.start();
         // Loop forever listening for incoming requests
@@ -55,8 +55,10 @@ public class ListenerThread extends Thread {
                 Log.d("ListenerThread run()", "Check 7 Creating input stream");
                 BufferedReader in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 // Wait for the clients request message
+                out.println("Connected");
                 while (!in.ready()) {
                     //wait
+                    Log.d("Check", "Waiting");
                 }
                 Log.d("ListenerThread run()", "Check 8 Reading message");
                 // Read the clients request message
@@ -69,7 +71,23 @@ public class ListenerThread extends Thread {
                     // Accept the order
                     acceptOrder(data);
                     out.println("Order accepted");
-                    sendToast("Incoming order from Table" + data[0]);
+                    String cmd = "Incoming order from Table" + data[0];
+                    sendToast(cmd);
+                    MyActivity.messages.add(cmd);
+                    // Update the order of the queue
+                    Log.d("acceptOrder", "Check 3");
+                    String[] c = data[1].replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
+                    Log.d("acceptOrder", "Check 4 " + Arrays.toString(c));
+                    placeOrderInQueue(c, Integer.parseInt(data[0]) - 1);
+                    Log.d("acceptOrder", "Check 5");
+                }
+                else if (data[2].equals("UPDATE")){
+                    // Update an order
+                    acceptOrder(data);
+                    out.println("Order Updated");
+                    String cmd = "Incoming update from Table" + data[0];
+                    sendToast(cmd);
+                    MyActivity.messages.add(cmd);
                 }
                 else if (data[2].equals("INIT")){
                     // Sync all clients with the new ID/IP lists
@@ -95,15 +113,18 @@ public class ListenerThread extends Thread {
                         cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
                                 "!!ACK!!" + Arrays.toString(MyActivity.tableIPs);
                         out.println(cmd);
-                        sendToast("Table" + data[0] + " has come online");
+                        cmd = "Table" + data[0] + " has come online";
+                        sendToast(cmd);
+                        MyActivity.messages.add("Table" + data[0] + " has come online");
                         out.close();
                         in.close();
                         sock.close();
                         srv.close();
-                        broadcastIPs(Integer.parseInt(data[0]));
+                        broadcastIPs(Integer.parseInt(data[0])-1);
                         continue;
                     }
                 }
+                MyActivity.setRefresh();
                 Log.d("ListenerThread run()", "Check 10 Transaction complete, closing");
                 // Close the current TCP session
                 out.close();
@@ -135,12 +156,6 @@ public class ListenerThread extends Thread {
             qty = Integer.parseInt(items[i].split("=")[1]);
             MyActivity.updateTableOrder("table" + data[0], item, qty);
         }
-        // Update the order of the queue
-        Log.d("acceptOrder", "Check 3");
-        String[] c = data[1].replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
-        Log.d("acceptOrder", "Check 4 " + Arrays.toString(c));
-        placeOrderInQueue(c, Integer.parseInt(data[0]) - 1);
-        Log.d("acceptOrder", "Check 5");
     }
 
     public void placeOrderInQueue(String[] clock, int cVector){
@@ -299,15 +314,17 @@ public class ListenerThread extends Thread {
     public void broadcastIPs(int id){
         // Method for broadcasting the IP address list to all clients
         String cmd = "6000!!" + Arrays.toString(MyActivity.vClock) +
-                "INFO!!" + Arrays.toString(MyActivity.tableIPs);
+                "!!INFO!!" + Arrays.toString(MyActivity.tableIPs);
         // Loop through each index in IP list
         for (int i=0; i<10; i++){
             // Check if this is the new table
             if (i==id){
                 // Skip this message as it has already been sent
+                Log.d("Broadcast", "Skipping broadcast to id: " + i);
             }
             // Check to see if there is an IP address for this table index
             else if (!MyActivity.tableIPs[i].equals("0")){
+                Log.d("Broadcast", "Sending broadcast to id: " + i + " " + MyActivity.tableIPs[i]);
                 // Make a TCP call sending the new IP lists
                 TCPCall(MyActivity.tableIPs[i], cmd);
             }
