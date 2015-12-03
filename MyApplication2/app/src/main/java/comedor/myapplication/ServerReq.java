@@ -17,7 +17,7 @@ import java.util.Arrays;
  */
 class ServerReq {
 
-    private static final Integer SERVER_PORT = 6000;
+    public static final Integer SERVER_PORT = 6000;
     private static final String SERVER_IP = "192.168.1.102";
     private static final int TIMEOUT = 500;//ms
 
@@ -36,12 +36,12 @@ class ServerReq {
             next = false;
             try {
                 clientSckt = new Socket(SERVER_IP, SERVER_PORT);
-                clientSckt.setSoTimeout(TIMEOUT + 100);
+                clientSckt.setSoTimeout(TIMEOUT + 100); //JUST IN CASE
                 PrintWriter outToServer = new PrintWriter(clientSckt.getOutputStream(), true);
                 BufferedReader inFromServer =
                         new BufferedReader(new InputStreamReader(clientSckt.getInputStream()));
 
-                //WAIT FOR ACK OR SOMETHING
+                //WAIT FOR SERVER CONNECTION ACK
                 long startTime = System.currentTimeMillis();
                 while (!inFromServer.ready()) {
                     if (System.currentTimeMillis()-startTime > TIMEOUT) {
@@ -56,24 +56,26 @@ class ServerReq {
                     continue;
                 }
 
-                inFromServer.readLine();
-                outToServer.println(OUT);
+                inFromServer.readLine();//ACK from server
+                outToServer.println(OUT);//REQUEST to server
 
                 //EXPECTED response from server:
                 //OK/ACK or ERROR if attrb check fail. ALWAYS expecting CLK[] on response..
                 answer = inFromServer.readLine();
 
                 clientSckt.close();
-            } catch (SocketTimeoutException t) {
+            }
+            catch (SocketTimeoutException t) {
                 Log.i("SERVER_REQ", "SocketTimeoutException " + t.toString() + " :: " + OUT);
                 continue;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 Log.e("SERVER_REQ", "Exception " + e.toString() + " :: " + OUT);
                 return "ERROR";
             }
             break; //IF I GET HERE I'M GOOD
-        }
+        }//end while true
 
         Log.d("SERVER_REQ", "Response: " + answer);
         return answer; //raw answer returned

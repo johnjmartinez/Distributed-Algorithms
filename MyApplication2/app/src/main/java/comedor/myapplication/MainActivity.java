@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity { //LOGIN SCREEN
     public static String[] IP_MAP = null; //RCV FROM SERVER DURING INIT
     public static final HashMap<String, Double> PRICES; //MAIN HASH FOR PRICES
     public static HashMap<String, Integer> foodQuantity = new HashMap<String, Integer>(); //TICKET
-    public static Boolean LIVE_ORDER = false;
-    public static String MY_IP = null;
-    private static Boolean REFRESH_VIEW = false;
+    public static String MY_IP = null; //SET AFTER INIT
+    public static Boolean LIVE_ORDER = false; //SET AFTER FIRST ORDER/UPDATES ONLY AFTER
+    private static Boolean REFRESH_VIEW = false; //UPDATE TICKET VIEW
 
     static {
         PRICES = new HashMap<String, Double>();

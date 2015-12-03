@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -87,9 +86,9 @@ class IncomingMSGThread implements Runnable  {
             String INCOMING = in.readLine();
             String[] fields = INCOMING.split("!!"); //main delimeter = !!
 
-            //SERVER_ID=6000 (same as server port??) --- OPS={<see below>}
+            //SERVER_ID=6000 (same as server port) --- OPS={<see below>}
             //INCOMING = SID + CLK + TAG + MSG
-            String SID = "6000"; //SET SERVER ID ACCORDINGLY (SID==PORT)
+            String SID = ServerReq.SERVER_PORT.toString(); //SET SERVER ID ACCORDINGLY (SID==PORT)
             if (fields[0].equals(SID)) {
                 if (fields.length == 4) {
                     updateCLK(Integer.parseInt(SID), fields[1]);
@@ -105,10 +104,11 @@ class IncomingMSGThread implements Runnable  {
                     Integer ID = Integer.parseInt(fields[0].replaceAll("\\s+",""));
 
                     //Check ID is valid --- getting real ID, NOT id-1
-                    if (ID > MainActivity.getCLK().length ||
-                        !(MainActivity.IP_MAP[ID - 1].equals(clientSckt.getInetAddress().getHostAddress()))) {
+                    if (ID > MainActivity.IP_MAP.length ||
+                        !(MainActivity.IP_MAP[ID - 1].equals(clientSckt.getInetAddress().getHostAddress()))
+                       ){
                         throw new IllegalStateException("Invalid IP in Listener Thread " +
-                                Arrays.toString(MainActivity.getCLK()) );
+                                MainActivity.IP_MAP );
                     }
                     else {
                         updateCLK(ID, fields[1]);
@@ -135,7 +135,7 @@ class IncomingMSGThread implements Runnable  {
         String[] vector = strCLK.replaceAll("\\[|\\]", "").split(","); //get rid of brackets, split
         Integer newComponent = null;
 
-        if (clk == null) {
+        if (clk == null) { //INIT?
             clk = new Integer[vector.length]; // All zeroes
         }
 
@@ -162,7 +162,6 @@ class IncomingMSGThread implements Runnable  {
         MainActivity.tickCLK();
 
         Log.d("LISTENER", "CLK update complete");
-
     }
 
     public void displayToast(final String msg, final Application app) {
@@ -176,7 +175,6 @@ class IncomingMSGThread implements Runnable  {
                         Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     public void processMSG( String tag, String msg ) { //SERVE MSGS ONLY
@@ -224,6 +222,5 @@ class IncomingMSGThread implements Runnable  {
                 break;
         }
     }
-
 }//end class
 
