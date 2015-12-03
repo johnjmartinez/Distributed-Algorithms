@@ -64,14 +64,17 @@ public class TestThread extends Thread {
                 Log.d("run", "Check 3");
                 if (iter==1) {
                     Log.d("run", "Check 3a");
+                    MyActivity.tableIPs[0] = "1";
                     cmd += "!![1, 0, 0, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!SHRIMP WONTON STIR-FRY=1";
                 }
                 else if (iter==2) {
                     Log.d("run", "Check 3b");
+                    MyActivity.tableIPs[1] = "1";
                     cmd += "!![1, 1, 1, 0, 0, 0, 0, 0, 0, 0]!!ORDER!!CHICKEN CEASAR SALAD=2";
                 }
                 else if (iter==3) {
                     Log.d("run", "Check 3c");
+                    MyActivity.tableIPs[2] = "1";
                     cmd += "!![1, 0, 1, 0, 0, 0, 0, 0, 0, 0]!!" +
                             "ORDER!!NEW THE BLAZIN' TEXAN=1#FRESH FRUIT CITRONADE=2";
                 }
@@ -83,7 +86,7 @@ public class TestThread extends Thread {
                 iter++;
                 Log.d("run", "Check 6");
                 cmd = "";
-                if (iter>3){
+                if (iter>4){
                     Log.d("run", "Check 7");
                     break;
                 }

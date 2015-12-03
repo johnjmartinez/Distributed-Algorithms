@@ -51,7 +51,7 @@ public class MyActivity extends AppCompatActivity {
     public static HashMap<String, String> accounts = new HashMap<String, String>();
     public static int[] vClock = {0,0,0,0,0,0,0,0,0,0};
     public static ArrayList<String> messages = new ArrayList<String>();
-    public static String[] tableIPs = {"1", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
+    public static String[] tableIPs = {"0", "0", "0", "0", "0", "0", "0", "0", "0", "0"};
     private static boolean refreshView = false;
 
     static {

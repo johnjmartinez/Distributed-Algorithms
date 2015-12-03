@@ -75,7 +75,11 @@ public class TableInfo extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {
         super.onPrepareOptionsMenu(menu);
-
+        if (MyActivity.tableIPs[Integer.parseInt(table.split("table")[1])-1]!="0") {
+            MenuItem itm = (MenuItem) menu.findItem(R.id.status);
+            itm.setIcon(R.drawable.online);
+            this.status = "online";
+        }
         return true;
     }
 
