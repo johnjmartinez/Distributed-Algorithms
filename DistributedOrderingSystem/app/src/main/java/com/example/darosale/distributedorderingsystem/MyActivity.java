@@ -79,10 +79,12 @@ public class MyActivity extends AppCompatActivity {
         return PRICES.get(item);
     }
 
-    public static void updateTableOrder(String table, String item, Integer qty) {
+    public static synchronized void updateTableOrder(String table, String item, Integer qty) {
         // Method for creating, or updating table orders
         // Check if the table order is already there, we can just update it
         // Else we need to instantiate the mapping and the add the item
+        // We synchronize because the listener thread and main thread both
+        // make calls here
         if (tableOrders.containsKey(table)) {
             tableOrders.get(table).put(item, qty);
         } else {
