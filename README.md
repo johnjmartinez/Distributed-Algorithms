@@ -14,4 +14,4 @@ Using proven algorithms for distributed networking and open source mobile client
 **CLIENT:** [MyApplication2]  (https://github.com/johnjmartinez/distRestApp/tree/master/MyApplication2/app/src/main/java/comedor/myapplication)  
   
 [**FINAL REPORT**] (https://drive.google.com/open?id=1aOTDb5iG8YFz0KZ-yEpwWBgMxPwuDKnF16nj6Cb7Gzk)  
-[**PRESENTATION**] (https://docs.google.com/presentation/d/1kvYZcomjiv_iXWtawpf684bpOUuOZSH9o1NaKL9JyBM)
+[**PRESENTATION**] (https://docs.google.com/presentation/d/1kvYZcomjiv_iXWtawpf684bpOUuOZSH9o1NaKL9JyBM/present)
